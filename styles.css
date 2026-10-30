@@ -1215,13 +1215,48 @@ img {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 24px;
-  align-items: start;
+  align-items: stretch;
 }
 
 .projects-right {
+  display: contents;
+}
+
+/* Five projects: three equal cards, then two balanced cards. */
+.projects-grid {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.project-card {
+  grid-column: span 2;
+  min-height: 270px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+}
+
+.project-card-featured {
+  grid-row: auto;
+}
+
+.project-card[data-project="3"],
+.project-card[data-project="4"] {
+  grid-column: span 3;
+}
+
+.project-card-featured .project-quote {
+  flex-grow: 0;
+}
+
+.project-card .open-case-btn {
+  margin-top: auto;
+}
+
+.project-card[data-project="0"] .project-card-header {
+  margin-bottom: 0;
+}
+
+.project-card[data-project="0"] .project-quote {
+  display: none;
 }
 
 .project-card {
@@ -1738,6 +1773,13 @@ img {
   
   .project-card-featured {
     grid-row: auto;
+  }
+
+  .project-card,
+  .project-card[data-project="3"],
+  .project-card[data-project="4"] {
+    grid-column: auto;
+    min-height: 0;
   }
   
   .toolkit-layout {
