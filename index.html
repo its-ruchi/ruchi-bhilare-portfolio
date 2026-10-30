@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ruchi Bhilare — Open the door</title>
+  <meta name="description" content="Come in. I'll show you what I've been building. Portfolio of Ruchi Bhilare — a product-minded builder.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ===== PRELOADER ===== -->
+  <div class="preloader" id="preloader">
+    <span class="preloader-text">RUCHI BHILARE</span>
+    <div class="preloader-bar">
+      <div class="preloader-fill"></div>
+    </div>
+  </div>
+
+  <!-- ===== GRAIN TEXTURE OVERLAY ===== -->
+  <div class="grain-overlay"></div>
+
+  <!-- ==================== LANDING / DOOR SCREEN ==================== -->
+  <div id="landing-screen" class="landing-screen">
+    <header class="landing-header">
+      <span class="landing-name">RUCHI BHILARE · MUMBAI</span>
+      <button class="skip-btn" id="skip-door-btn">SKIP THE DOOR</button>
+    </header>
+
+    <div class="door-scene">
+      <!-- Spotlight glow -->
+      <div class="spotlight"></div>
+
+      <!-- The Door -->
+      <div class="door-wrapper" id="door-wrapper">
+        <div class="door-frame">
+          <div class="door" id="the-door">
+            <div class="door-panel door-panel-top"></div>
+            <div class="door-handle"></div>
+            <div class="door-panel door-panel-bottom"></div>
+          </div>
+        </div>
+        <!-- Glow behind door when opening -->
+        <div class="door-glow" id="door-glow"></div>
+      </div>
+
+      <!-- Character Avatar -->
+      <div class="avatar-character">
+        <div class="avatar-head">
+          <div class="avatar-hair"></div>
+          <div class="avatar-face">
+            <div class="avatar-eyes">
+              <span class="avatar-eye"></span>
+              <span class="avatar-eye"></span>
+            </div>
+            <div class="avatar-smile"></div>
+          </div>
+        </div>
+        <div class="avatar-body"></div>
+        <div class="avatar-legs">
+          <div class="avatar-leg"></div>
+          <div class="avatar-leg"></div>
+        </div>
+        <div class="avatar-shadow"></div>
+      </div>
+    </div>
+
+    <div class="door-cta">
+      <button class="open-door-btn" id="open-door-btn">
+        <span>Open the door</span>
+        <span class="arrow">→</span>
+      </button>
+      <p class="door-subtitle">A portfolio, but make it a little less boring.</p>
+    </div>
+  </div>
+
+  <!-- ==================== MAIN PORTFOLIO ==================== -->
+  <div id="portfolio" class="portfolio hidden">
+
+    <!-- Sticky Navigation -->
+    <nav class="main-nav" id="main-nav">
+      <button class="nav-back" id="nav-back-btn">← DOOR</button>
+      <div class="nav-links">
+        <a href="#about" class="nav-link">ABOUT</a>
+        <a href="#experience" class="nav-link">EXPERIENCE</a>
+        <a href="#projects" class="nav-link">PROJECTS</a>
+      </div>
+      <button class="nav-resume" id="resume-btn">RESUME</button>
+    </nav>
+
+    <!-- ===== HERO SECTION ===== -->
+    <section class="hero-section" id="hero">
+      <div class="hero-glow"></div>
+      <div class="hero-content">
+        <p class="hero-eyebrow">YOU'RE IN. WELCOME.</p>
+        <h1 class="hero-heading">Come in. I'll show you what I've been <em>building.</em></h1>
+        <p class="hero-sub">I'm Ruchi — a product-minded builder who likes turning ambiguous problems into things people can actually use.</p>
+
+        <div class="door-cards">
+          <a href="#about" class="door-card">
+            <div class="door-card-visual arch">
+              <div class="door-card-handle"></div>
+              <span class="door-card-label">About</span>
+            </div>
+            <p class="door-card-caption">WHO, WHAT, WHAT NOT</p>
+          </a>
+          <a href="#experience" class="door-card">
+            <div class="door-card-visual arch">
+              <div class="door-card-handle"></div>
+              <span class="door-card-label">Experience</span>
+            </div>
+            <p class="door-card-caption">FOUR DESKS SO FAR</p>
+          </a>
+          <a href="#projects" class="door-card">
+            <div class="door-card-visual arch">
+              <div class="door-card-handle"></div>
+              <span class="door-card-label">Projects</span>
+            </div>
+            <p class="door-card-caption">THINGS I SHIPPED</p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 01 · ABOUT ===== -->
+    <section class="section-about" id="about">
+      <div class="section-header">
+        <div class="section-header-left">
+          <span class="section-number">01</span>
+          <h2 class="section-title">About</h2>
+        </div>
+        <p class="section-tagline">The short version. A real one, not a biography.</p>
+      </div>
+
+      <!-- A · What I've Done -->
+      <div class="about-what-done">
+        <p class="subsection-label">A · WHAT I'VE DONE</p>
+        <div class="about-what-done-grid">
+          <div class="about-bio">
+            <p class="bio-main">CS graduate who ended up everywhere a product gets made: writing PRDs, defining flows, sitting between engineers and everyone else, doing outreach and GTM, and building AI products end to end.</p>
+            <p class="bio-sub">I like talking to users, shipping fast, and changing my mind when the feedback says so.</p>
+          </div>
+          <div class="education-card">
+            <p class="subsection-label">D · EDUCATION</p>
+            <h3 class="edu-title">B.Sc. Computer Science</h3>
+            <p class="edu-college">B.K. Birla College, Kalyan — University of Mumbai</p>
+            <div class="edu-stats">
+              <span class="edu-stat">CGPI 9.24 / 10</span>
+              <span class="edu-stat">May 2026</span>
+            </div>
+            <div class="edu-buttons">
+              <button class="btn-primary" id="view-resume-btn">View resume</button>
+              <button class="btn-outline" id="download-resume-btn">Download resume</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- B · What I Like -->
+      <div class="about-what-like">
+        <p class="subsection-label">B · WHAT I LIKE</p>
+        <div class="likes-grid">
+          <div class="like-card">
+            <h4>Building things</h4>
+            <p>Taking an idea from "this could be useful" to something people can click.</p>
+          </div>
+          <div class="like-card">
+            <h4>AI</h4>
+            <p>Not just using it — figuring out where it genuinely makes a product better.</p>
+          </div>
+          <div class="like-card">
+            <h4>Product thinking</h4>
+            <p>Understanding the problem before jumping to the solution.</p>
+          </div>
+          <div class="like-card">
+            <h4>Startups</h4>
+            <p>Small teams, ambiguity, ownership, learning by doing.</p>
+          </div>
+          <div class="like-card">
+            <h4>Writing</h4>
+            <p>Thinking through ideas by putting them into words.</p>
+          </div>
+          <div class="like-card">
+            <h4>Experimenting</h4>
+            <p>Build fast, get feedback, change it.</p>
+          </div>
+        </div>
+      </div>
+
+
+    </section>
+
+    <!-- ===== 02 · EXPERIENCE ===== -->
+    <section class="section-experience" id="experience">
+      <div class="section-header section-header-dark">
+        <div class="section-header-left">
+          <span class="section-number">02</span>
+          <h2 class="section-title light">Experience</h2>
+        </div>
+        <p class="section-tagline light">Places I've worked, and the decisions I got to make there.</p>
+      </div>
+
+      <div class="experience-layout">
+        <!-- Timeline -->
+        <div class="experience-timeline">
+          <div class="timeline-item active" data-exp="0">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <span class="timeline-date">CURRENT <span class="now-badge">NOW</span></span>
+              <h3 class="timeline-company">The Product Folks</h3>
+              <p class="timeline-role">Founder's Office Intern</p>
+            </div>
+          </div>
+          <div class="timeline-item" data-exp="1">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <span class="timeline-date">MAY 2026 – JUL 2026</span>
+              <h3 class="timeline-company">Kaari Labs</h3>
+              <p class="timeline-role">Product Development Intern</p>
+            </div>
+          </div>
+          <div class="timeline-item" data-exp="2">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <span class="timeline-date">JUN 2026 – AUG 2026</span>
+              <h3 class="timeline-company">Fourfive</h3>
+              <p class="timeline-role">Business Development Intern</p>
+            </div>
+          </div>
+          <div class="timeline-item" data-exp="3">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <span class="timeline-date">MAR 2026</span>
+              <h3 class="timeline-company">Digiculum</h3>
+              <p class="timeline-role">Freelance Web Developer</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detail Card -->
+        <div class="experience-detail" id="experience-detail">
+          <!-- Filled by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 03 · PROJECTS ===== -->
+    <section class="section-projects" id="projects">
+      <div class="section-header">
+        <div class="section-header-left">
+          <span class="section-number">03</span>
+          <h2 class="section-title">Projects</h2>
+        </div>
+        <p class="section-tagline">Evidence of how I think. Problem, decision, build, feedback.</p>
+      </div>
+
+      <div class="projects-grid">
+        <!-- ResumePilot (featured) -->
+        <div class="project-card project-card-featured" data-project="0">
+          <div class="project-card-header">
+            <span class="project-eyebrow">01 · AI RESUME TAILORING TOOL</span>
+            <span class="project-badge">START HERE</span>
+          </div>
+          <h3 class="project-name">ResumePilot</h3>
+          <div class="project-problem">
+            <span class="problem-label">PROBLEM</span>
+            <span>Candidates rewrite resumes for every job posting without knowing whether their bullets match what an ATS is scanning for.</span>
+          </div>
+          <blockquote class="project-quote">Honest + ATS-safe, over impressive-sounding.</blockquote>
+          <button class="open-case-btn">OPEN THE CASE →</button>
+        </div>
+
+        <div class="projects-right">
+          <!-- MediSchedule -->
+          <div class="project-card" data-project="1">
+            <span class="project-eyebrow">02 · HEALTHCARE COORDINATION PLATFORM</span>
+            <h3 class="project-name">MediSchedule</h3>
+            <div class="project-problem">
+              <span class="problem-label">PROBLEM</span>
+              <span>Clinics needed a lightweight way to separate emergency from routine patients and coordinate care without exposing personal phone numbers.</span>
+            </div>
+            <button class="open-case-btn">OPEN THE CASE →</button>
+          </div>
+
+          <!-- LinkedIn Growth OS -->
+          <div class="project-card" data-project="2">
+            <span class="project-eyebrow">03 · AI PERSONAL-BRANDING SAAS</span>
+            <h3 class="project-name">LinkedIn Growth OS</h3>
+            <div class="project-problem">
+              <span class="problem-label">PROBLEM</span>
+              <span>Founders and creators want to post consistently, but generic AI writing tools make them sound like someone else.</span>
+            </div>
+            <button class="open-case-btn">OPEN THE CASE →</button>
+          </div>
+
+          <!-- Product Management Career Case Study -->
+          <div class="project-card" data-project="3">
+            <span class="project-eyebrow">04 · PRODUCT CASE STUDY · SUBSTACK</span>
+            <h3 class="project-name">Substack Reading Assistant</h3>
+            <div class="project-problem">
+              <span class="problem-label">PROBLEM</span>
+              <span>Readers save articles with every intention of returning, but those articles get buried before they are read.</span>
+            </div>
+            <button class="open-case-btn">OPEN THE CASE →</button>
+          </div>
+          <!-- On The Spot -->
+          <div class="project-card" data-project="4">
+            <span class="project-eyebrow">05 · SPEAKING PRACTICE PLATFORM</span>
+            <h3 class="project-name">On The Spot</h3>
+            <div class="project-problem">
+              <span class="problem-label">PROBLEM</span>
+              <span>People need a simple way to practise thinking and speaking clearly without relying on AI-generated answers.</span>
+            </div>
+            <button class="open-case-btn">OPEN THE CASE →</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TOOLKIT & CERTIFICATIONS ===== -->
+    <section class="section-toolkit" id="toolkit">
+      <div class="toolkit-layout">
+        <div class="toolkit-left">
+          <h3 class="toolkit-heading">THE TOOLKIT</h3>
+          <div class="toolkit-tabs">
+            <button class="toolkit-tab active" data-tab="technical">TECHNICAL</button>
+            <button class="toolkit-tab" data-tab="product">PRODUCT & ANALYTICS</button>
+            <button class="toolkit-tab" data-tab="tools">TOOLS</button>
+            <button class="toolkit-tab" data-tab="ways">WAYS OF WORKING</button>
+          </div>
+          <div class="toolkit-content" id="toolkit-content">
+            <!-- Filled by JS -->
+          </div>
+        </div>
+        <div class="toolkit-right">
+          <h3 class="toolkit-heading">CERTIFICATIONS</h3>
+          <div class="cert-list">
+            <div class="cert-item">
+              <h4>Anthropic — AI Fluency & Claude 101</h4>
+              <p>Prompt design fundamentals and applied use of Claude across product workflows.</p>
+            </div>
+            <div class="cert-item">
+              <h4>Deloitte — Data Analytics Virtual Internship</h4>
+              <p>Simulated data analysis project covering forecasting and client-facing recommendations.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FOOTER / CONTACT ===== -->
+    <footer class="section-footer" id="contact">
+      <p class="footer-eyebrow">MADE IT ALL THE WAY HERE?</p>
+      <h2 class="footer-heading">You should probably <em>say hi.</em></h2>
+      <div class="footer-links">
+        <a href="mailto:bhilareruchi@gmail.com" class="footer-link" target="_blank">bhilareruchi@gmail.com ↗</a>
+        <a href="https://linkedin.com/in/ruchi-b-87738826b" class="footer-link" target="_blank">linkedin.com/in/ruchi-b-87738826b ↗</a>
+        <a href="https://github.com/its-ruchi" class="footer-link" target="_blank">github.com/its-ruchi ↗</a>
+      </div>
+      <button class="back-to-door-btn" id="back-to-door-btn">Leave through the door ←</button>
+    </footer>
+  </div>
+
+  <!-- ===== CASE STUDY MODAL ===== -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal" id="modal">
+      <button class="modal-close" id="modal-close">✕</button>
+      <div class="modal-body" id="modal-body">
+        <!-- Filled by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== RESUME MODAL ===== -->
+  <div class="resume-overlay" id="resume-overlay">
+    <div class="resume-modal" id="resume-modal">
+      <button class="modal-close" id="resume-close">✕</button>
+      <div class="resume-body" id="resume-body">
+        <h2>Resume</h2>
+        <div class="resume-content-placeholder">
+          <div class="resume-section-block">
+            <h3>Ruchi Bhilare</h3>
+            <p class="resume-contact-line">Mumbai, India · bhilareruchi@gmail.com · linkedin.com/in/ruchi-b-87738826b · github.com/its-ruchi</p>
+          </div>
+          <div class="resume-section-block">
+            <h4>Education</h4>
+            <p><strong>B.Sc. Computer Science</strong> — B.K. Birla College, Kalyan (University of Mumbai)</p>
+            <p>CGPI: 9.24/10 · Graduated May 2026</p>
+          </div>
+          <div class="resume-section-block">
+            <h4>Experience</h4>
+            <p><strong>Founder's Office Intern</strong> — The Product Folks (Current)<br><span style="font-size: 13px; color: #8C827A;">Pitch deck creation, blog writing, content strategy & research</span></p>
+            <p><strong>Product Development Intern</strong> — Kaari Labs (May–Jul 2026)</p>
+            <p><strong>Business Development Intern</strong> — Fourfive (Jun–Aug 2026)</p>
+            <p><strong>Freelance Web Developer</strong> — Digiculum (Mar 2026)</p>
+          </div>
+          <div class="resume-section-block">
+            <h4>Projects</h4>
+            <p><strong>ResumePilot</strong> — AI Resume Tailoring Tool</p>
+            <p><strong>MediSchedule</strong> — Healthcare Coordination Platform</p>
+            <p><strong>LinkedIn Growth OS</strong> — AI Personal-Branding SaaS</p>
+          </div>
+          <div class="resume-section-block">
+            <h4>Skills</h4>
+            <p>React.js, Next.js, TypeScript, Node.js, Supabase, SQL/MySQL, Python, Figma, Git/GitHub</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

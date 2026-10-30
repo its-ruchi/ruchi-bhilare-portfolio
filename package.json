@@ -1,0 +1,8 @@
+{
+  "name": "ruchi-bhilare-portfolio",
+  "version": "1.0.0",
+  "description": "Ruchi Bhilare — Portfolio",
+  "scripts": {
+    "dev": "node server.js"
+  }
+}
