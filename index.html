@@ -48,22 +48,106 @@
       </div>
 
       <!-- Character Avatar -->
-      <div class="avatar-character">
-        <div class="avatar-head">
-          <div class="avatar-hair"></div>
-          <div class="avatar-face">
-            <div class="avatar-eyes">
-              <span class="avatar-eye"></span>
-              <span class="avatar-eye"></span>
-            </div>
-            <div class="avatar-smile"></div>
-          </div>
-        </div>
-        <div class="avatar-body"></div>
-        <div class="avatar-legs">
-          <div class="avatar-leg"></div>
-          <div class="avatar-leg"></div>
-        </div>
+      <div class="avatar-character" id="avatar" role="button" tabindex="0" aria-label="Say hi to Ruchi">
+        <span class="avatar-bubble" id="avatar-bubble" aria-live="polite"></span>
+        <svg class="avatar-svg" viewBox="0 0 200 440" aria-hidden="true">
+          <defs>
+            <linearGradient id="avSkin" x1="0" x2="1"><stop offset="0" stop-color="#F8D6BE"/><stop offset="1" stop-color="#E8B394"/></linearGradient>
+            <linearGradient id="avSweater" x1="0" x2="1"><stop offset="0" stop-color="#FCF6EB"/><stop offset="1" stop-color="#E2D6C1"/></linearGradient>
+            <linearGradient id="avJeans" x1="0" x2="1"><stop offset="0" stop-color="#5678A6"/><stop offset="1" stop-color="#314B72"/></linearGradient>
+            <linearGradient id="avHair" x1="0" x2="1"><stop offset="0" stop-color="#4C352A"/><stop offset="1" stop-color="#24170F"/></linearGradient>
+          </defs>
+
+          <!-- hair behind the body -->
+          <g class="av-hair-back">
+            <path d="M100 32 C62 32 44 62 46 102 C47 132 38 152 42 182 C46 212 34 232 44 262 C52 271 66 267 72 256 L128 256 C134 267 148 271 156 262 C166 232 154 212 158 182 C162 152 153 132 154 102 C156 62 138 32 100 32 Z" fill="url(#avHair)"/>
+            <path d="M50 150 C46 180 52 210 46 240 M152 150 C156 180 150 210 156 240" stroke="#5E4234" stroke-width="1.6" fill="none" opacity=".6"/>
+          </g>
+
+          <!-- legs: wide-leg jeans and sneakers -->
+          <g class="av-legs">
+            <path d="M57 410 C54 420 58 428 68 428 L92 428 C98 428 100 420 97 410 Z" fill="#F5F2EA"/>
+            <path d="M56 424 C58 430 64 432 70 432 L94 432 C99 432 101 428 100 424 Z" fill="#CFC7B8"/>
+            <path d="M103 410 C100 420 102 428 108 428 L132 428 C142 428 146 420 143 410 Z" fill="#F5F2EA"/>
+            <path d="M100 424 C99 428 101 432 106 432 L130 432 C136 432 142 430 144 424 Z" fill="#CFC7B8"/>
+            <path d="M66 418 L74 416 M108 416 L116 418" stroke="#C9C1B2" stroke-width="1.4" stroke-linecap="round"/>
+            <path d="M66 232 Q100 240 134 232 L135 256 L65 256 Z" fill="url(#avSkin)"/>
+            <path d="M64 250 L136 250 C138 268 139 284 140 300 L60 300 C61 284 62 268 64 250 Z" fill="url(#avJeans)"/>
+            <path d="M60 298 L99 298 L97 412 L55 412 C55 378 57 334 60 298 Z" fill="url(#avJeans)"/>
+            <path d="M101 298 L140 298 C143 334 145 378 145 412 L103 412 Z" fill="url(#avJeans)"/>
+            <path d="M64 250 L136 250 L136.6 260 L63.4 260 Z" fill="#3B5A85"/>
+            <path d="M55 402 L97 402 L97 412 L55 412 Z M103 402 L145 402 L145 412 L103 412 Z" fill="#2F4A70"/>
+            <circle cx="100" cy="255.5" r="2.6" fill="#E8E2D4"/>
+            <path d="M100 262 L100 284 Q100 292 92 296 M70 263 Q78 272 87 262 M113 262 Q122 272 130 263 M62 302 C59 340 58 380 58 402 M138 302 C141 340 142 380 142 402" stroke="#7C9BC4" stroke-width="1" fill="none" stroke-dasharray="2.5 2"/>
+          </g>
+
+          <!-- upper body breathes -->
+          <g class="av-upper">
+            <path d="M91 122 L109 122 L110 148 L90 148 Z" fill="#E2AC8D"/>
+            <path d="M68 152 C80 146 90 144 100 144 C110 144 120 146 132 152 C134 170 134 200 136 236 Q100 244 64 236 C66 200 66 170 68 152 Z" fill="url(#avSweater)"/>
+            <path d="M64 228 Q100 236 136 228 L136 237 Q100 245 64 237 Z" fill="#E6DBC8"/>
+            <path d="M72 231 v7 M82 233 v7 M92 234 v7 M102 234 v7 M112 234 v7 M122 233 v7 M130 231 v6" stroke="#D3C6AF" stroke-width="1"/>
+            <rect x="108" y="174" width="11" height="8" rx="2" fill="#8FB3C9"/><circle cx="116" cy="176.5" r="1.6" fill="#F2C14E"/>
+            <path d="M84 142 Q100 152 116 142 L117 153 Q100 162 83 153 Z" fill="#EEE4D3"/>
+            <path d="M89 147 v7 M95 149 v7 M100 150 v7 M105 149 v7 M111 147 v7" stroke="#D8CCB6" stroke-width=".9"/>
+            <path d="M87 155 Q100 170 113 155" stroke="#D9A93E" stroke-width="1.2" fill="none"/>
+            <circle cx="100" cy="166.5" r="2.4" fill="#E8B84A"/>
+
+            <!-- arm by her side -->
+            <g class="av-arm-left">
+              <path d="M68 152 C52 158 44 186 44 228 C44 256 46 274 50 288 L74 288 C73 262 72 232 74 196 C75 178 74 162 68 152 Z" fill="url(#avSweater)"/>
+              <rect x="48" y="282" width="27" height="12" rx="5" fill="#E6DBC8"/>
+              <ellipse cx="62" cy="304" rx="8.5" ry="11" fill="url(#avSkin)"/>
+            </g>
+            <!-- waving arm -->
+            <g class="av-arm-wave">
+              <g class="av-arm-wave-inner">
+                <path d="M132 152 C148 158 156 186 156 228 C156 256 154 274 150 288 L126 288 C127 262 128 232 126 196 C125 178 126 162 132 152 Z" fill="url(#avSweater)"/>
+                <rect x="125" y="282" width="27" height="12" rx="5" fill="#E6DBC8"/>
+                <ellipse cx="138" cy="304" rx="8.5" ry="11" fill="url(#avSkin)"/>
+              </g>
+            </g>
+
+            <!-- head follows the cursor -->
+            <g class="av-head">
+              <g class="av-head-idle">
+                <ellipse cx="65" cy="100" rx="6" ry="8.5" fill="#EBB898"/>
+                <ellipse cx="135" cy="100" rx="6" ry="8.5" fill="#E4AD8C"/>
+                <circle cx="65" cy="111" r="3.6" stroke="#E2B24C" stroke-width="1.4" fill="none"/>
+                <circle cx="135" cy="111" r="3.6" stroke="#E2B24C" stroke-width="1.4" fill="none"/>
+                <ellipse cx="100" cy="96" rx="36" ry="39" fill="url(#avSkin)"/>
+                <ellipse cx="77" cy="113" rx="7.5" ry="4.2" fill="#F29A9A" opacity=".5"/>
+                <ellipse cx="123" cy="113" rx="7.5" ry="4.2" fill="#F29A9A" opacity=".5"/>
+                <path d="M78 84 Q86 80 93 83 M107 83 Q114 80 122 84" stroke="#3A2820" stroke-width="2" fill="none" stroke-linecap="round"/>
+                <g class="av-eye">
+                  <ellipse cx="86" cy="100" rx="7" ry="8.4" fill="#24150F"/>
+                  <g class="av-pupil">
+                    <ellipse cx="86" cy="101" rx="4.6" ry="5.4" fill="#4A2E22"/>
+                    <circle cx="83.6" cy="97" r="2.4" fill="#fff"/>
+                    <circle cx="88.6" cy="104" r="1.1" fill="#fff"/>
+                  </g>
+                  <path d="M79.5 96 L76.2 94" stroke="#24150F" stroke-width="1.6" stroke-linecap="round"/>
+                </g>
+                <g class="av-eye">
+                  <ellipse cx="114" cy="100" rx="7" ry="8.4" fill="#24150F"/>
+                  <g class="av-pupil">
+                    <ellipse cx="114" cy="101" rx="4.6" ry="5.4" fill="#4A2E22"/>
+                    <circle cx="111.6" cy="97" r="2.4" fill="#fff"/>
+                    <circle cx="116.6" cy="104" r="1.1" fill="#fff"/>
+                  </g>
+                  <path d="M120.5 96 L123.8 94" stroke="#24150F" stroke-width="1.6" stroke-linecap="round"/>
+                </g>
+                <path d="M100 106 q1.4 2.6 -.6 3.2" stroke="#D49478" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+                <path class="av-smile" d="M94 117 Q100 122.5 106 117" stroke="#8A3B2E" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+                <path class="av-open" d="M94.5 116.5 Q100 126 105.5 116.5 Z" fill="#9C3D33"/>
+                <path d="M60 104 C54 58 78 38 100 38 C122 38 146 58 140 104 C136 82 126 66 108 58 C104 66 96 66 92 58 C74 66 64 82 60 104 Z" fill="url(#avHair)"/>
+                <path d="M62 92 C52 122 60 150 50 182 C66 172 70 140 68 110 Z M138 92 C148 122 140 150 150 182 C134 172 130 140 132 110 Z" fill="url(#avHair)"/>
+                <path d="M76 50 Q90 41 104 43" stroke="#7A5644" stroke-width="2" fill="none" stroke-linecap="round" opacity=".55"/>
+                <path d="M76 58 L78 62.5 L83 63 L79.2 66 L80.5 71 L76 68.3 L71.5 71 L72.8 66 L69 63 L74 62.5 Z" fill="#F2C14E"/>
+              </g>
+            </g>
+          </g>
+        </svg>
         <div class="avatar-shadow"></div>
       </div>
     </div>
@@ -87,6 +171,7 @@
         <a href="#about" class="nav-link">ABOUT</a>
         <a href="#experience" class="nav-link">EXPERIENCE</a>
         <a href="#projects" class="nav-link">PROJECTS</a>
+        <a href="#case-studies" class="nav-link">CASE STUDIES</a>
       </div>
       <button class="nav-resume" id="resume-btn">RESUME</button>
     </nav>
@@ -105,21 +190,24 @@
               <div class="door-card-handle"></div>
               <span class="door-card-label">About</span>
             </div>
-            <p class="door-card-caption">WHO, WHAT, WHAT NOT</p>
           </a>
           <a href="#experience" class="door-card">
             <div class="door-card-visual arch">
               <div class="door-card-handle"></div>
               <span class="door-card-label">Experience</span>
             </div>
-            <p class="door-card-caption">FOUR DESKS SO FAR</p>
           </a>
           <a href="#projects" class="door-card">
             <div class="door-card-visual arch">
               <div class="door-card-handle"></div>
               <span class="door-card-label">Projects</span>
             </div>
-            <p class="door-card-caption">THINGS I SHIPPED</p>
+          </a>
+          <a href="#case-studies" class="door-card">
+            <div class="door-card-visual arch">
+              <div class="door-card-handle"></div>
+              <span class="door-card-label">Case Studies</span>
+            </div>
           </a>
         </div>
       </div>
@@ -295,9 +383,35 @@
             <button class="open-case-btn">OPEN THE CASE →</button>
           </div>
 
-          <!-- Product Management Career Case Study -->
+          <!-- On The Spot -->
           <div class="project-card" data-project="3">
-            <span class="project-eyebrow">04 · PRODUCT CASE STUDY · SUBSTACK</span>
+            <span class="project-eyebrow">04 · SPEAKING PRACTICE PLATFORM</span>
+            <h3 class="project-name">On The Spot</h3>
+            <div class="project-problem">
+              <span class="problem-label">PROBLEM</span>
+              <span>People need a simple way to practise thinking and speaking clearly without relying on AI-generated answers.</span>
+            </div>
+            <button class="open-case-btn">OPEN THE CASE →</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 04 · CASE STUDIES ===== -->
+    <section class="section-projects section-case-studies" id="case-studies">
+      <div class="section-header">
+        <div class="section-header-left">
+          <span class="section-number">04</span>
+          <h2 class="section-title">Case Studies</h2>
+        </div>
+        <p class="section-tagline">Other people's products, and what I'd change. Problem, insight, fix, metric.</p>
+      </div>
+
+      <div class="projects-grid">
+        <div class="projects-right">
+          <!-- Substack Reading Assistant -->
+          <div class="project-card" data-project="4">
+            <span class="project-eyebrow">01 · PRODUCT CASE STUDY · SUBSTACK</span>
             <h3 class="project-name">Substack Reading Assistant</h3>
             <div class="project-problem">
               <span class="problem-label">PROBLEM</span>
@@ -305,13 +419,14 @@
             </div>
             <button class="open-case-btn">OPEN THE CASE →</button>
           </div>
-          <!-- On The Spot -->
-          <div class="project-card" data-project="4">
-            <span class="project-eyebrow">05 · SPEAKING PRACTICE PLATFORM</span>
-            <h3 class="project-name">On The Spot</h3>
+
+          <!-- Blinkit (The Morning Milk Problem) -->
+          <div class="project-card" data-project="5">
+            <span class="project-eyebrow">02 · INTERACTIVE CASE STUDY · BLINKIT</span>
+            <h3 class="project-name">Blinkit Case Study</h3>
             <div class="project-problem">
               <span class="problem-label">PROBLEM</span>
-              <span>People need a simple way to practise thinking and speaking clearly without relying on AI-generated answers.</span>
+              <span>When a staple like milk is out of stock, the customer doesn't just skip one order. They try a rival app, and their habit moves with them.</span>
             </div>
             <button class="open-case-btn">OPEN THE CASE →</button>
           </div>
@@ -379,6 +494,7 @@
       <button class="modal-close" id="resume-close">✕</button>
       <div class="resume-body" id="resume-body">
         <h2>Resume</h2>
+        <a href="Ruchi_Bhilare_Resume.pdf" download="Ruchi_Bhilare_Resume.pdf" class="btn-primary resume-download">Download PDF ↓</a>
         <div class="resume-content-placeholder">
           <div class="resume-section-block">
             <h3>Ruchi Bhilare</h3>
@@ -391,20 +507,26 @@
           </div>
           <div class="resume-section-block">
             <h4>Experience</h4>
-            <p><strong>Founder's Office Intern</strong> — The Product Folks (Current)<br><span style="font-size: 13px; color: #8C827A;">Pitch deck creation, blog writing, content strategy & research</span></p>
-            <p><strong>Product Development Intern</strong> — Kaari Labs (May–Jul 2026)</p>
-            <p><strong>Business Development Intern</strong> — Fourfive (Jun–Aug 2026)</p>
-            <p><strong>Freelance Web Developer</strong> — Digiculum (Mar 2026)</p>
+            <p><strong>Founder's Office Intern</strong> — The Product Folks (Sep 2026 – Present)<br><span style="font-size: 13px; color: #8C827A;">Long-form product management blogs and pitch decks, using LLM-assisted workflows reviewed for accuracy and voice</span></p>
+            <p><strong>Product Development Intern</strong> — Kaari Labs, Remote (May–Jul 2026)<br><span style="font-size: 13px; color: #8C827A;">Four core product flows as structured PRDs; a working 3D product configurator prototype</span></p>
+            <p><strong>Freelance Web Developer</strong> — Digiculum, client project (Mar 2026)<br><span style="font-size: 13px; color: #8C827A;">Shipped a production course-selling platform end to end across Agile sprints</span></p>
           </div>
           <div class="resume-section-block">
             <h4>Projects</h4>
-            <p><strong>ResumePilot</strong> — AI Resume Tailoring Tool</p>
             <p><strong>MediSchedule</strong> — Healthcare Coordination Platform</p>
             <p><strong>LinkedIn Growth OS</strong> — AI Personal-Branding SaaS</p>
+            <p><strong>ResumePilot</strong> — AI Resume Tailoring Tool</p>
           </div>
           <div class="resume-section-block">
             <h4>Skills</h4>
-            <p>React.js, Next.js, TypeScript, Node.js, Supabase, SQL/MySQL, Python, Figma, Git/GitHub</p>
+            <p><strong>Technical:</strong> React.js, Next.js, TypeScript, Node.js, Supabase, SQL (MySQL), Python (foundational), Excel, API fundamentals</p>
+            <p><strong>Product:</strong> Product Analytics &amp; A/B Testing, Product Metrics (Activation, Retention, North Star), Product Discovery &amp; User Research, PRDs, AI Product Evaluation</p>
+            <p><strong>Platforms:</strong> Claude, Cursor, ChatGPT, Lovable, Figma, Git/GitHub, n8n Automation</p>
+          </div>
+          <div class="resume-section-block">
+            <h4>Certifications</h4>
+            <p><strong>Anthropic</strong> — AI Fluency &amp; Claude 101 (Skilljar)</p>
+            <p><strong>Deloitte</strong> — Data Analytics Virtual Internship (Forage)</p>
           </div>
         </div>
       </div>

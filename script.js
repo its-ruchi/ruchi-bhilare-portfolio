@@ -110,6 +110,18 @@ const projectData = [
     link: "https://linkedin-growth-os-omega.vercel.app/"
   },
   {
+    eyebrow: "SPEAKING PRACTICE PLATFORM",
+    title: "On The Spot",
+    sections: [
+      { label: "THE PROBLEM", text: "People want to become clearer, more confident speakers, but it is hard to find low-pressure ways to practise thinking and speaking without relying on AI-generated answers." },
+      { label: "THE DECISION", text: "Create focused, time-boxed practice that gives people a random prompt, time to prepare notes, and a real constraint: speak from their own thinking." },
+      { label: "THE EXPERIENCE", text: "Choose a random idea or topic, take up to 10 minutes to prepare notes, then speak for 2 minutes. The format makes practice simple, repeatable, and honest." },
+      { label: "THE CONSTRAINT", text: "The product is designed for original practice: users do not use ChatGPT or other GPT tools to research or generate their response." },
+      { label: "WHAT I LEARNED", text: "A small time constraint can turn a vague goal like 'be a better speaker' into a habit people can actually build." }
+    ],
+    link: "https://onthespot-tau.vercel.app/"
+  },
+  {
     eyebrow: "PRODUCT CASE STUDY · SUBSTACK",
     title: "Substack Reading Assistant",
     sections: [
@@ -124,16 +136,18 @@ const projectData = [
     linkLabel: "VIEW FULL CASE STUDY"
   },
   {
-    eyebrow: "SPEAKING PRACTICE PLATFORM",
-    title: "On The Spot",
+    eyebrow: "INTERACTIVE PRODUCT CASE STUDY · THE MORNING MILK PROBLEM",
+    title: "Blinkit Case Study",
     sections: [
-      { label: "THE PROBLEM", text: "People want to become clearer, more confident speakers, but it is hard to find low-pressure ways to practise thinking and speaking without relying on AI-generated answers." },
-      { label: "THE DECISION", text: "Create focused, time-boxed practice that gives people a random prompt, time to prepare notes, and a real constraint: speak from their own thinking." },
-      { label: "THE EXPERIENCE", text: "Choose a random idea or topic, take up to 10 minutes to prepare notes, then speak for 2 minutes. The format makes practice simple, repeatable, and honest." },
-      { label: "THE CONSTRAINT", text: "The product is designed for original practice: users do not use ChatGPT or other GPT tools to research or generate their response." },
-      { label: "WHAT I LEARNED", text: "A small time constraint can turn a vague goal like 'be a better speaker' into a habit people can actually build." }
+      { label: "THE MOMENT", text: "8 am, no milk for chai. My mom opened Blinkit and found cow milk out of stock, with no alternative and no restock date. She installed another app and ordered there. A week later, she ordered bread there too." },
+      { label: "THE INSIGHT", text: "People don't stay loyal to delivery apps; they stay out of habit. Every out-of-stock dead end is a free trial for a rival app, and the empty shelf does the rival's marketing for them." },
+      { label: "THE SIZE OF IT", text: "Blinkit already leads on availability (about 94% in a Bernstein study of 150 items). But at about 25 lakh orders a day, even a small gap adds up to thousands of people a day drifting away. An interactive calculator lets you test my assumptions." },
+      { label: "THE FIXES", text: "Before: Stock Pulse, honest “Only 3 left” badges for shoppers plus restock alerts for the dark store. During: Smart Swap, one best-match replacement in one tap. After: Notify Me, a back-in-stock message that gives people a reason to return." },
+      { label: "PLAYING FAIR", text: "Urgency only when it's true. Badges use live store stock, and swaps pick the best match, not the brand that pays most." },
+      { label: "HOW I'D MEASURE IT", text: "North Star: orders that arrive complete, or with a swap the person accepted. Main signals: carts saved after an out-of-stock, and quick exits that suggest someone left for another app. Guardrails: order size, refunds, notification mutes and badge accuracy." }
     ],
-    link: "https://onthespot-tau.vercel.app/"
+    link: "blinkit-case-study.html",
+    linkLabel: "PLAY THE INTERACTIVE STORY ↗"
   }
 ];
 
@@ -141,7 +155,14 @@ const toolkitData = {
   technical: ["React.js", "Next.js", "TypeScript", "Node.js", "Supabase", "SQL / MySQL", "Python", "Excel", "API fundamentals"],
   product: ["Product Analytics", "A/B Testing", "Product Metrics", "Activation", "Retention", "North Star Metrics", "Product Discovery", "User Research", "PRDs", "AI Product Evaluation"],
   tools: ["Claude", "Cursor", "ChatGPT", "Lovable", "Figma", "Git / GitHub", "n8n"],
-  ways: ["Client & Stakeholder Communication", "Agile", "Scrum"]
+  // Ways of working reads as sentences, not keywords: a lead line plus a short aside.
+  ways: [
+    { lead: "Give me 12 days, I'll learn it.", note: "Day 1: confused. Day 12: explaining it to you like I invented it." },
+    { lead: "Talk to users first.", note: "Then build. Then talk to them again, and change my mind if they say so." },
+    { lead: "Ship the rough version.", note: "Something people can click beats a perfect doc nobody opens." },
+    { lead: "Translate between rooms.", note: "Engineers, founders, clients: same problem, different words. I speak all three." },
+    { lead: "Agile & Scrum,", note: "minus the meetings about meetings." }
+  ]
 };
 
 // ===== DOM ELEMENTS =====
@@ -169,7 +190,8 @@ const resumeClose = document.getElementById('resume-close');
 function openDoor() {
   theDoor.classList.add('opening');
   doorGlow.classList.add('active');
-  
+  if (window.avatarWelcome) window.avatarWelcome();
+
   setTimeout(() => {
     landingScreen.classList.add('exit');
   }, 800);
@@ -196,6 +218,7 @@ function goBackToDoor() {
   landingScreen.classList.remove('exit');
   theDoor.classList.remove('opening');
   doorGlow.classList.remove('active');
+  if (window.avatarReset) window.avatarReset();
   window.scrollTo(0, 0);
 }
 
@@ -206,20 +229,108 @@ doorWrapper.addEventListener('click', (e) => {
   }
 });
 skipDoorBtn.addEventListener('click', skipDoor);
+
+// Deep links (e.g. index.html#projects from a case study) skip the door and land on that section.
+const deepLinkTarget = location.hash ? document.getElementById(location.hash.slice(1)) : null;
+if (deepLinkTarget && portfolio.contains(deepLinkTarget)) {
+  landingScreen.style.display = 'none';
+  portfolio.classList.remove('hidden');
+  window.addEventListener('load', () => {
+    const navHeight = document.getElementById('main-nav').offsetHeight;
+    window.scrollTo(0, deepLinkTarget.getBoundingClientRect().top + window.pageYOffset - navHeight - 20);
+  });
+}
 navBackBtn.addEventListener('click', goBackToDoor);
 backToDoorBtn.addEventListener('click', goBackToDoor);
 
-// ===== AVATAR WAVE ON HOVER =====
-const avatarCharacter = document.querySelector('.avatar-character');
-if (avatarCharacter) {
-  doorWrapper.addEventListener('mouseenter', () => {
-    avatarCharacter.style.animation = 'none';
-    avatarCharacter.offsetHeight;
-    avatarCharacter.style.animation = 'wave 0.6s ease';
+// ===== AVATAR: a small, living host by the door =====
+const avatar = document.getElementById('avatar');
+if (avatar) {
+  const svg = avatar.querySelector('.avatar-svg');
+  const head = avatar.querySelector('.av-head');
+  const pupils = avatar.querySelectorAll('.av-pupil');
+  const bubble = document.getElementById('avatar-bubble');
+  const clickLines = [
+    "Hi, I'm Ruchi!",
+    "I turn fuzzy ideas into things you can click.",
+    "← The door's right there.",
+    "Okay, okay. One more wave."
+  ];
+  let lineIndex = 0;
+  let sayTimer = null;
+
+  // Talk: speech bubble + open mouth + wave, for a moment.
+  function say(text, ms) {
+    bubble.textContent = text;
+    bubble.classList.add('show');
+    avatar.classList.add('talking', 'waving');
+    clearTimeout(sayTimer);
+    sayTimer = setTimeout(() => {
+      bubble.classList.remove('show');
+      avatar.classList.remove('talking', 'waving');
+    }, ms);
+  }
+
+  // Eyes (and a little of the head) follow the cursor or finger.
+  function look(clientX, clientY) {
+    const r = svg.getBoundingClientRect();
+    if (!r.width) return;
+    const cx = r.left + r.width / 2;
+    const cy = r.top + r.height * (100 / 440);
+    const dx = clientX - cx;
+    const dy = clientY - cy;
+    const dist = Math.hypot(dx, dy) || 1;
+    const k = Math.min(1, dist / 260);
+    const mx = (dx / dist) * 2.3 * k;
+    const my = (dy / dist) * 2.0 * k;
+    pupils.forEach(p => { p.style.transform = `translate(${mx}px, ${my}px)`; });
+    if (!avatar.classList.contains('look-door')) {
+      head.style.transform = `rotate(${(dx / dist) * 4 * k}deg)`;
+    }
+  }
+  document.addEventListener('pointermove', (e) => look(e.clientX, e.clientY));
+
+  // Natural blinking at random intervals, sometimes a double blink.
+  function blinkLoop() {
+    avatar.classList.add('blink');
+    setTimeout(() => avatar.classList.remove('blink'), 140);
+    if (Math.random() < 0.2) {
+      setTimeout(() => {
+        avatar.classList.add('blink');
+        setTimeout(() => avatar.classList.remove('blink'), 140);
+      }, 300);
+    }
+    setTimeout(blinkLoop, 2200 + Math.random() * 3200);
+  }
+  setTimeout(blinkLoop, 1500);
+
+  // Hovering the door: she waves you in.
+  doorWrapper.addEventListener('mouseenter', () => say('Go on, open it!', 1800));
+
+  // Clicking her: a hop and a line.
+  function poke() {
+    avatar.classList.remove('hop');
+    void avatar.offsetWidth;
+    avatar.classList.add('hop');
+    say(clickLines[lineIndex % clickLines.length], 2200);
+    lineIndex++;
+  }
+  avatar.addEventListener('click', poke);
+  avatar.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); poke(); }
   });
-  doorWrapper.addEventListener('mouseleave', () => {
-    avatarCharacter.style.animation = 'float 3s ease-in-out infinite';
-  });
+
+  // Called when the door opens: she turns to it and welcomes you.
+  window.avatarWelcome = () => {
+    avatar.classList.add('look-door');
+    head.style.transform = 'rotate(-6deg)';
+    pupils.forEach(p => { p.style.transform = 'translate(-2.3px, 0)'; });
+    say('Come on in!', 1500);
+  };
+  window.avatarReset = () => {
+    avatar.classList.remove('look-door');
+    head.style.transform = '';
+  };
 }
 
 // ===== EXPERIENCE TIMELINE =====
@@ -260,6 +371,13 @@ renderExperience(0);
 // ===== TOOLKIT TABS =====
 function renderToolkit(tab) {
   const items = toolkitData[tab];
+  toolkitContent.classList.toggle('ways', tab === 'ways');
+  if (tab === 'ways') {
+    toolkitContent.innerHTML = items.map(w =>
+      `<p class="way-item"><span class="way-lead">${w.lead}</span> <span class="way-note">${w.note}</span></p>`
+    ).join('');
+    return;
+  }
   toolkitContent.innerHTML = items.map((item, idx) => 
     `<span class="skill-item">${item}</span>${idx < items.length - 1 ? '<span class="skill-dot">.</span>' : '<span class="skill-dot">.</span>'}`
   ).join('');
@@ -328,7 +446,16 @@ function closeResumeModal() {
 
 resumeBtn.addEventListener('click', openResumeModal);
 viewResumeBtn.addEventListener('click', openResumeModal);
-downloadResumeBtn.addEventListener('click', openResumeModal);
+// Download the actual PDF resume.
+function downloadResume() {
+  const a = document.createElement('a');
+  a.href = 'Ruchi_Bhilare_Resume.pdf';
+  a.download = 'Ruchi_Bhilare_Resume.pdf';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+downloadResumeBtn.addEventListener('click', downloadResume);
 resumeClose.addEventListener('click', closeResumeModal);
 resumeOverlay.addEventListener('click', (e) => {
   if (e.target === resumeOverlay) closeResumeModal();

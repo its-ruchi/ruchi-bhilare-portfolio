@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blinkit Case Study · The Morning Milk Problem</title>
+<meta name="description" content="An interactive product case study by Ruchi Bhilare: how one out-of-stock moment on a quick-commerce app moves a customer's habit to a rival, and three fixes to stop it.">
+<meta property="og:title" content="Blinkit Case Study · The Morning Milk Problem">
+<meta property="og:description" content="An interactive product case study by Ruchi Bhilare on out-of-stock moments, habit and quick commerce.">
+<meta property="og:type" content="article">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: one story card at a time, picture beside words, comic beats revealed by click, tap or arrow keys. */
+:root{
+  --bg:#E7F0EA;
+  --paper:#FFFDF8;
+  --ink:#1E2B29;
+  --muted:#4F5E59;
+  --sun:#FFC83D;
+  --leaf:#1B7F45;
+  --coral:#C8402A;
+  --line:#CBD8CF;
+  --app:#2E8B1D;
+  --display:'Fredoka','Trebuchet MS',system-ui,sans-serif;
+  --body:'Nunito','Segoe UI',system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+.app{height:100%;display:flex;flex-direction:column;outline:none}
+.bar{height:6px;background:var(--line)}
+.bar i{display:block;height:100%;width:0;background:var(--leaf);transition:width .3s ease}
+.stage{flex:1;display:flex;align-items:center;justify-content:center;padding:18px 16px;overflow:auto;cursor:pointer}
+.card{position:relative;width:100%;max-width:1060px;min-height:min(640px,100%);background:var(--paper);border:2px solid var(--line);border-radius:28px;padding:44px 64px;display:flex}
+.side{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:2px solid var(--ink);background:var(--paper);font-family:var(--display);font-size:22px;font-weight:700;color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2}
+.side.l{left:10px}.side.r{right:10px}
+.side:disabled{opacity:.25;cursor:default}
+.slide{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.slide.one{grid-template-columns:1fr}
+.slide[hidden]{display:none}
+.art{display:flex;align-items:flex-end;justify-content:center;gap:14px;min-height:280px;flex-wrap:wrap;position:relative}
+.art.mid{align-items:center}
+.fig svg{display:block;width:100%;height:auto}
+.fig.bust{width:250px}
+.fig.full{width:140px;flex-shrink:0}
+.fz{width:200px;flex-shrink:0}
+.art.scene{flex-wrap:nowrap;gap:0;align-items:flex-end}
+.fig.prop{width:120px}
+.words{display:flex;flex-direction:column;gap:16px}
+.kicker{font-family:var(--display);font-weight:600;font-size:17px;letter-spacing:.06em;color:var(--leaf);margin:0}
+h1,h2{font-family:var(--display);font-weight:700;margin:0;text-wrap:balance;line-height:1.08}
+h1{font-size:clamp(40px,6vw,66px)}
+h2{font-size:clamp(28px,3.5vw,40px)}
+p{margin:0;font-size:clamp(18px,1.6vw,21px);line-height:1.5;color:var(--muted);max-width:36ch}
+.slide.one p{max-width:62ch}
+b{color:var(--ink)}
+.big{font-family:var(--display);font-weight:700;font-size:clamp(44px,7vw,80px);color:var(--coral);line-height:1}
+.bubble{position:relative;background:#fff;border:2px solid var(--ink);border-radius:22px;padding:14px 20px;font-family:var(--display);font-weight:500;font-size:clamp(20px,1.9vw,24px);color:var(--ink);max-width:30ch;line-height:1.35}
+.bubble::after{content:"";position:absolute;left:30px;bottom:-13px;width:20px;height:20px;background:#fff;border-right:2px solid var(--ink);border-bottom:2px solid var(--ink);transform:rotate(45deg)}
+.bubble.think{border-style:dashed}
+.bubble.hi{font-size:clamp(30px,3.4vw,42px);font-weight:700;padding:14px 26px;align-self:flex-start}
+.wave-hand{transform-origin:186px 160px;animation:wave 1.6s ease-in-out infinite}
+@keyframes wave{0%,60%,100%{transform:rotate(0deg)}10%,30%{transform:rotate(16deg)}20%,40%{transform:rotate(-10deg)}}
+.hint{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;font-family:var(--display);font-weight:600;font-size:17px;color:#6E4F00;background:#FFF1C7;border:2px dashed #E3B232;border-radius:999px;padding:6px 14px}
+.hint::before{content:"";width:10px;height:10px;border-radius:50%;background:#E3B232;animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.6);opacity:.5}}
+.note{font-size:15px;color:var(--muted)}
+.src{font-size:14px;color:var(--muted)}
+.src a{color:var(--leaf);font-weight:700}
+.beat{opacity:0;transform:translateY(10px);transition:opacity .35s ease,transform .35s ease}
+.beat.on{opacity:1;transform:none}
+.box{border-radius:22px;padding:26px 28px;display:flex;flex-direction:column;gap:12px}
+.box.principle{background:var(--ink)}
+.box.principle h2{color:#fff}
+.box.principle p{color:#D4E2DB;max-width:none}
+.label{font-family:var(--display);font-weight:700;font-size:17px;letter-spacing:.08em;margin:0}
+.box.principle .label{color:var(--sun)}
+
+/* swap pairs: .pre shows before beat 1, .post after */
+.post{display:none}
+.slide.b1 .pre{display:none}
+.slide.b1 .post{display:block}
+.slide.b1 span.post,.slide.b1 b.post{display:inline}
+
+/* fridge */
+.fridge{position:relative;width:200px;aspect-ratio:4/5;flex-shrink:0}
+.fridge svg{position:absolute;inset:0;width:100%;height:100%}
+.door{position:absolute;left:4.2%;top:3.3%;width:91.6%;height:93.4%;border-radius:16px;border:5px solid var(--ink);background:#E5EEEA;cursor:pointer;transform-origin:right center;transition:transform .7s cubic-bezier(.3,.7,.3,1),opacity .7s;display:flex;align-items:flex-start;justify-content:center;padding-top:60%;font-family:var(--display);font-weight:600;font-size:17px;color:var(--ink)}
+.door::before{content:"";position:absolute;left:16px;top:96px;width:9px;height:64px;border-radius:5px;background:var(--ink)}
+.slide.b1 .door{transform:perspective(700px) rotateY(-78deg);opacity:.92;pointer-events:none}
+.door span{background:#fff;border:2px dashed var(--ink);border-radius:999px;padding:4px 12px}
+.slide.b1 .door span{display:none}
+
+/* app phone (concept, modelled on a real quick-commerce layout) */
+.phone{width:262px;height:520px;border:10px solid var(--ink);border-radius:38px;background:#fff;overflow:hidden;display:flex;flex-direction:column;position:relative;flex-shrink:0;cursor:default}
+.ap-top{background:#FBF6E6;padding:12px 12px 10px;display:flex;flex-direction:column;gap:8px}
+.ap-eta{font-family:var(--display);font-weight:700;font-size:18px;color:var(--ink);line-height:1}
+.ap-eta small{display:block;font-family:var(--body);font-size:12px;font-weight:700;color:#5E6A62;margin-top:3px}
+.ap-search{display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #E2E2DE;border-radius:12px;padding:8px 10px;font-size:13px;color:#7A807D}
+.ap-title{font-family:var(--display);font-weight:600;font-size:16px;padding:12px 12px 4px}
+.ap-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 10px;padding:6px 12px}
+.pc{display:flex;flex-direction:column;gap:3px;min-width:0}
+.pc .img{position:relative;background:#EEF3F6;border-radius:12px;height:96px;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.pc .img svg{width:56px;height:auto}
+.pc .add{position:absolute;right:6px;bottom:-12px;background:#fff;border:1.5px solid var(--app);color:var(--app);font-weight:800;font-size:12px;border-radius:8px;padding:5px 12px;font-family:var(--body);cursor:pointer}
+.pc .add.off{border-color:#B9BEBB;color:#7C827F;padding:5px 7px;font-size:11px}
+.pc .qty{font-size:12px;color:#5E6A62}
+.pc .price{font-weight:800;font-size:15px}
+.pc .name{font-size:13px;font-weight:700;line-height:1.25}
+.pc .mins{font-size:11px;color:#6A726E}
+.pc.dim .img svg{opacity:.4;filter:grayscale(1)}
+.badge{position:absolute;left:6px;top:6px;font-size:11px;font-weight:800;padding:3px 7px;border-radius:7px}
+.badge.red{background:var(--coral);color:#fff}
+.badge.amber{background:#FFE7A3;color:#5C4300}
+.cart{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);background:var(--app);color:#fff;border-radius:999px;padding:9px 18px;font-weight:800;font-size:13px;white-space:nowrap}
+.toast{position:absolute;left:12px;right:12px;top:118px;background:var(--ink);color:#fff;border-radius:12px;padding:10px 12px;font-size:13px;font-weight:700;opacity:0;transform:translateY(-6px);transition:all .3s}
+.slide.b1 .toast{opacity:1;transform:none}
+.slide.b1 .shake{animation:shake .45s}
+@keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.scrim{background:#56625C}
+.sheet{margin-top:auto;background:#fff;border-radius:22px 22px 0 0;padding:14px 14px 70px;display:flex;flex-direction:column;gap:10px}
+.sheet strong{font-size:15px}
+.sheet .lbl{font-size:11px;font-weight:800;letter-spacing:.06em;color:var(--leaf)}
+.best{border:2px solid var(--app);border-radius:14px;padding:10px;display:flex;gap:10px;background:#F2FAF4}
+.best .img{width:64px;height:64px;border-radius:10px;background:#EEF3F6;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.best .img svg{width:40px}
+.best div.t{display:flex;flex-direction:column;gap:3px;font-size:12px;color:#55625C}
+.best div.t b{font-size:13px}
+.chips{display:flex;gap:5px;flex-wrap:wrap}
+.chip-s{font-size:11px;font-weight:800;background:#DDF0E3;color:#1B6B3A;border-radius:6px;padding:2px 6px}
+.cta{background:var(--app);color:#fff;border:none;font-family:var(--body);font-weight:800;font-size:14px;border-radius:10px;padding:10px;cursor:pointer;width:100%}
+.slide.b1 .cta{background:#DDF0E3;color:#1B6B3A}
+.pdp{display:flex;flex-direction:column;height:100%}
+.pdp .hero{background:#EEF3F6;height:200px;display:flex;align-items:center;justify-content:center}
+.pdp .hero svg{width:110px;opacity:.45;filter:grayscale(1)}
+.pdp .facts{display:flex;gap:6px;padding:10px 12px}
+.pdp .facts div{flex:1;border:1px solid #E2E2DE;border-radius:8px;padding:6px;font-size:11px;color:#6A726E}
+.pdp .facts b{display:block;font-size:12px}
+.pdp .info{padding:4px 12px;display:flex;flex-direction:column;gap:4px}
+.pdp .info b{font-size:17px}
+.pdp .bottom{margin-top:auto;border-top:1px solid #E2E2DE;padding:10px 12px 12px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.pdp .bottom small{font-size:12px;color:var(--coral);font-weight:800}
+.notify{background:var(--app);color:#fff;border:none;font-family:var(--body);font-weight:800;font-size:13px;border-radius:10px;padding:10px 14px;cursor:pointer}
+.slide.b1 .notify{background:#DDF0E3;color:#1B6B3A}
+.banner{position:absolute;left:8px;right:8px;top:8px;background:#fff;border-radius:16px;box-shadow:0 6px 18px rgba(0,0,0,.25);padding:10px;display:flex;gap:10px;transform:translateY(-130%);transition:transform .5s cubic-bezier(.3,.7,.3,1) .3s}
+.slide.b1 .banner{transform:none}
+.banner .ic{width:30px;height:30px;border-radius:8px;background:var(--sun);flex-shrink:0}
+.banner div{display:flex;flex-direction:column;gap:2px;font-size:12px;color:#55625C}
+.banner b{font-size:13px}
+.other-top{background:#5B3FA6;color:#fff;padding:16px 14px;font-family:var(--display);font-weight:700;font-size:18px}
+.prog{height:8px;border-radius:4px;background:#E3E6E2;overflow:hidden;margin:16px}
+.prog i{display:block;height:100%;width:70%;background:#5B3FA6}
+.home{background:linear-gradient(#9BC3B0,#6E9C8B);padding:24px 14px 14px;gap:14px}
+.icons{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.ico{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;color:#fff;font-weight:700}
+.ico i{width:46px;height:46px;border-radius:13px;display:block}
+.dock{margin-top:auto;background:rgba(255,255,255,.35);border-radius:20px;padding:10px;display:flex;justify-content:space-around}
+.ico.hot i{outline:3px solid var(--sun);outline-offset:2px}
+.tablet{width:250px;background:var(--ink);border-radius:20px;padding:12px;cursor:default}
+.tablet .scr{background:#fff;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:6px}
+.tablet small{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:.04em}
+.tablet b{font-size:16px}
+.tablet .bar2{height:10px;border-radius:5px;background:#F1DCD6;overflow:hidden}
+.tablet .bar2 i{display:block;height:100%;width:22%;background:var(--coral)}
+.btn-soft{font-family:var(--display);font-weight:600;font-size:16px;border:2px solid var(--ink);background:#fff;color:var(--ink);border-radius:12px;padding:8px 14px;cursor:pointer}
+
+/* numbers */
+.dots{display:grid;grid-template-columns:repeat(10,1fr);gap:7px;width:280px}
+.dots i{aspect-ratio:1;border-radius:50%;background:var(--leaf)}
+.dots i.miss{background:var(--coral)}
+.legend{display:flex;gap:16px;font-size:15px;font-weight:700;color:var(--muted)}
+.legend span::before{content:"";display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:-1px;background:var(--leaf)}
+.legend span.m::before{background:var(--coral)}
+.calc{display:flex;flex-direction:column;gap:16px;width:100%;max-width:440px;cursor:default}
+.calc label{display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:700;color:var(--ink)}
+.calc label span{display:flex;justify-content:space-between}
+.calc output{font-family:var(--display);color:var(--leaf);font-size:18px}
+.calc input{width:100%;accent-color:var(--leaf);height:28px}
+.result{background:var(--ink);color:#fff;border-radius:20px;padding:18px 20px}
+.result b{display:block;font-family:var(--display);font-size:44px;color:var(--sun);line-height:1.05}
+.result span{font-size:16px;color:#D4E2DB}
+
+/* fixes overview */
+.intro-row{display:flex;align-items:center;gap:28px}
+.fixes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;width:100%}
+.fix{background:#fff;border:2px solid var(--line);border-radius:20px;padding:22px 24px;display:flex;flex-direction:column;gap:8px}
+.fix small{font-size:13px;font-weight:800;letter-spacing:.08em;color:var(--leaf)}
+.fix b{font-family:var(--display);font-size:26px;line-height:1.1}
+.fix span{font-size:17px;color:var(--muted);line-height:1.45}
+.fix.found{grid-column:1 / -1;background:var(--ink);border-color:var(--ink);flex-direction:row;align-items:center;gap:20px;flex-wrap:wrap}
+.fix.found small{color:var(--sun)}.fix.found b{color:#fff}.fix.found span{color:#D4E2DB}
+
+/* ethics quiz */
+.quiz{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%}
+.qcard{font-family:var(--body);text-align:left;background:#fff;border:2px solid var(--line);border-radius:20px;padding:18px;display:flex;flex-direction:column;gap:10px;cursor:pointer;color:var(--ink)}
+.qcard .mini{display:flex;align-items:center;gap:10px;background:#F4F6F3;border-radius:12px;padding:10px}
+.qcard .mini i{width:34px;height:34px;border-radius:8px;background:#EEF3F6;flex-shrink:0}
+.qcard .mini b{font-size:14px}
+.qcard p{font-size:16px;max-width:none}
+.verdict{display:none;font-family:var(--display);font-weight:700;font-size:18px;border-radius:10px;padding:6px 10px;align-self:flex-start}
+.slide.b1 .verdict{display:block}
+.verdict.ok{background:#DDF0E3;color:#1B6B3A}
+.verdict.no{background:#FCE3DD;color:#A3321F}
+.slide.b1 .qcard.good{border-color:var(--leaf)}
+.slide.b1 .qcard.bad{border-color:var(--coral)}
+.promises{display:flex;gap:10px;flex-wrap:wrap}
+.promises span{background:#fff;border:2px solid var(--leaf);color:var(--ink);font-weight:800;font-size:15px;border-radius:999px;padding:8px 14px}
+
+/* star map */
+.sky{position:relative;width:100%;max-width:460px;aspect-ratio:1.1/1;background:radial-gradient(circle at 50% 45%,#2C4A5E,#14232E 70%);border-radius:24px;cursor:default;overflow:hidden}
+.star{position:absolute;transform:translate(-50%,-50%);background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;color:#fff;font-family:var(--body);font-weight:800;font-size:12px;padding:4px}
+.star svg{display:block;filter:drop-shadow(0 0 6px rgba(255,214,90,.6));transition:transform .2s}
+.star:hover svg,.star.sel svg{transform:scale(1.18)}
+.star.sel span{background:var(--sun);color:var(--ink);border-radius:6px;padding:1px 6px}
+.star.shield svg{filter:none}
+.panel{background:#fff;border:2px solid var(--line);border-radius:18px;padding:16px 18px;display:flex;flex-direction:column;gap:6px;min-height:118px}
+.panel small{font-size:13px;font-weight:800;letter-spacing:.06em;color:var(--leaf)}
+.panel b{font-family:var(--display);font-size:22px}
+.panel span{font-size:16px;color:var(--muted);line-height:1.45}
+.keyrow{display:flex;gap:14px;flex-wrap:wrap;font-size:14px;color:var(--muted);font-weight:700}
+
+ul.clean{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:8px;font-size:clamp(17px,1.5vw,20px);color:var(--muted);line-height:1.45}
+ol.srcs{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:10px;font-size:16px;color:var(--muted)}
+ol.srcs a{color:var(--leaf);font-weight:700}
+
+/* nav */
+.nav{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 16px 14px;max-width:1092px;width:100%;margin:0 auto}
+.nav button{font-family:var(--display);font-weight:600;font-size:18px;border:2px solid var(--ink);background:var(--paper);color:var(--ink);border-radius:14px;padding:10px 18px;min-height:46px;cursor:pointer}
+.nav button.go{background:var(--ink);color:#fff}
+.nav button:disabled{opacity:.35;cursor:default}
+.nav .mid{display:flex;flex-direction:column;align-items:center;gap:2px}
+.endlinks{display:flex;gap:12px;flex-wrap:wrap}
+.endlinks a{font-family:var(--display);font-weight:600;font-size:17px;border:2px solid var(--ink);border-radius:12px;padding:8px 16px;color:var(--ink);text-decoration:none;background:#fff}
+.endlinks a.go{background:var(--ink);color:#fff}
+.count{font-weight:800;font-size:16px;color:var(--ink);font-variant-numeric:tabular-nums}
+.keys{font-size:13px;color:var(--muted)}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--leaf);outline-offset:3px}
+
+@media (max-width:780px){
+  .card{padding:26px 22px 30px;border-radius:22px}
+  .side{display:none}
+  .slide{grid-template-columns:1fr;gap:18px}
+  .art{min-height:0}
+  .fig.bust{width:190px}.fig.full{width:120px}.fig.prop{width:90px}
+  .phone{width:236px;height:470px}
+  .fridge,.fz{width:160px}
+  .fig.full{width:112px}
+  .quiz,.fixes{grid-template-columns:1fr}
+  .intro-row{flex-direction:column;align-items:flex-start;gap:12px}
+  .keys{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  .beat,.bar i,.door,.toast,.banner,.star svg{transition:none}
+  .slide.b1 .shake,.hint::before,.wave-hand{animation:none}
+}
+</style>
+</head>
+<body>
+<div class="app" id="app" tabindex="-1">
+  <div class="bar" aria-hidden="true"><i id="progress"></i></div>
+  <main class="stage" id="stage" aria-live="polite">
+    <div class="card">
+      <button class="side l" id="sideL" type="button" aria-label="Previous">‹</button>
+      <button class="side r" id="sideR" type="button" aria-label="Next">›</button>
+
+<!-- 1 title -->
+<section class="slide">
+  <div class="art"><div class="fig bust" data-char="ruchi" data-mood="smile"></div></div>
+  <div class="words">
+    <p class="kicker">BLINKIT CASE STUDY · A 2-MINUTE STORY</p>
+    <h1>The Morning Milk Problem</h1>
+    <div class="bubble">Hi, I’m Ruchi. Let me tell you how my mom quietly <b>switched apps</b>, and what I’d build so it doesn’t happen.</div>
+    <span class="hint">Tap anywhere, or press the → key</span>
+    <p class="note">Independent concept study using public data. Not affiliated with Blinkit.</p>
+  </div>
+</section>
+
+<!-- 2 walk to fridge -->
+<section class="slide">
+  <div class="art scene"><div class="fig full" data-char="momfull" data-mood="sleepy" data-pose="reach"></div><div class="fz" data-art="fridgeShut"></div></div>
+  <div class="words">
+    <h2>8:00 am. Mom is up.</h2>
+    <p>She heads straight to the fridge. First thing on her mind? <b>Chai.</b></p>
+    <p class="beat" data-beat="1">And chai needs milk…</p>
+  </div>
+</section>
+
+<!-- 3 open fridge -->
+<section class="slide">
+  <div class="art scene">
+    <div class="fig full pre" data-char="momfull" data-mood="think" data-pose="reach"></div>
+    <div class="fig full post" data-char="momfull" data-mood="shocked" data-pose="down"></div>
+    <div class="fridge" data-act="1">
+      <div data-art="fridgeIn" data-milk="no"></div>
+      <button class="door" type="button" data-act="1" aria-label="Open the fridge"><span>Tap to open</span></button>
+    </div>
+  </div>
+  <div class="words">
+    <h2 class="pre">Help Mom open the fridge.</h2>
+    <h2 class="post">Eggs. Bread. Veggies. Butter…</h2>
+    <span class="hint pre">Tap the fridge door</span>
+    <p class="big beat" data-beat="1">No milk!</p>
+  </div>
+</section>
+
+<!-- 4 decide -->
+<section class="slide">
+  <div class="art"><div class="fig bust" data-char="mom" data-mood="annoyed"></div></div>
+  <div class="words">
+    <div class="bubble">Walk to the shop? At 8 am? <b>Not happening.</b></div>
+    <p class="beat" data-beat="1">So she does what millions of us do. She opens <b>Blinkit</b> and searches for cow milk.</p>
+  </div>
+</section>
+
+<!-- 5 out of stock -->
+<section class="slide">
+  <div class="art mid">
+    <div class="phone">
+      <div class="ap-top">
+        <div class="ap-eta">Delivery in 14 mins<small>Home</small></div>
+        <div class="ap-search"><svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" stroke="#555" stroke-width="2" fill="none"/><path d="M11 11l4 4" stroke="#555" stroke-width="2" stroke-linecap="round"/></svg>cow milk</div>
+      </div>
+      <div class="ap-grid">
+        <div class="pc dim shake"><div class="img" data-art="pouch"><button class="add off" type="button" data-act="1">Out of stock</button></div><span class="qty">500 ml</span><span class="price">₹32</span><span class="name">Amul Cow Milk</span><span class="mins">14 mins</span></div>
+        <div class="pc"><div class="img" data-art="pouchB"><button class="add" type="button">ADD</button></div><span class="qty">1 L</span><span class="price">₹68</span><span class="name">Full Cream Milk</span><span class="mins">14 mins</span></div>
+        <div class="pc"><div class="img" data-art="bread"><button class="add" type="button">ADD</button></div><span class="qty">400 g</span><span class="price">₹50</span><span class="name">Brown Bread</span></div>
+        <div class="pc"><div class="img" data-art="curd"><button class="add" type="button">ADD</button></div><span class="qty">400 g</span><span class="price">₹35</span><span class="name">Fresh Curd</span></div>
+      </div>
+      <div class="toast">Sorry, Amul Cow Milk is out of stock.</div>
+    </div>
+  </div>
+  <div class="words">
+    <h2>Cow milk: <span style="color:var(--coral)">out of stock.</span></h2>
+    <span class="hint pre">Try adding the milk to the cart</span>
+    <p class="beat" data-beat="1">Full cream isn’t what she wants. No other cow milk shown.</p>
+    <p class="beat" data-beat="2">No idea when it’s back. <b>A dead end.</b></p>
+    <p class="note">Concept screen based on the app’s layout.</p>
+  </div>
+</section>
+
+<!-- 6 other app -->
+<section class="slide">
+  <div class="art">
+    <div class="phone" style="height:360px">
+      <div class="other-top">Another app</div>
+      <p style="padding:16px 16px 0;font-size:15px;max-width:none">Installing…</p>
+      <div class="prog"><i></i></div>
+    </div>
+    <div class="fig prop beat" data-beat="2" data-art="scooter"></div>
+  </div>
+  <div class="words">
+    <div class="bubble think">Hmm. My neighbour uses <b>that other app</b>…</div>
+    <p class="beat" data-beat="1">One download later, she orders milk there.</p>
+    <p class="beat" data-beat="2">It arrives fast. Chai is saved. Happy ending? <b>For the other app, yes.</b></p>
+  </div>
+</section>
+
+<!-- 7 twist -->
+<section class="slide">
+  <div class="art mid">
+    <div class="phone home" style="height:440px">
+      <div class="icons">
+        <div class="ico"><i style="background:#F2A65A"></i>Photos</div>
+        <div class="ico"><i style="background:#3FA36B"></i>Chats</div>
+        <div class="ico"><i style="background:#2E8B1D"></i>Blinkit</div>
+        <div class="ico"><i style="background:#E8D27A"></i>Notes</div>
+        <div class="ico"><i style="background:#5C8DD6"></i>Bank</div>
+        <div class="ico"><i style="background:#D86A7A"></i>Music</div>
+      </div>
+      <div class="dock">
+        <div class="ico"><i style="background:#3D4A45"></i>Phone</div>
+        <div class="ico hot"><i style="background:#5B3FA6"></i>Other app</div>
+        <div class="ico"><i style="background:#7C8B85"></i>Camera</div>
+      </div>
+    </div>
+  </div>
+  <div class="words">
+    <h2>A week later, Mom needs bread.</h2>
+    <p class="beat" data-beat="1">She opens… <b>the other app.</b> It’s in her dock now.</p>
+    <p class="beat" data-beat="2" style="font-family:var(--display);font-size:clamp(24px,2.6vw,32px);color:var(--coral);font-weight:700">Blinkit didn’t lose one order. It lost her habit.</p>
+  </div>
+</section>
+
+<!-- 8 principle -->
+<section class="slide one">
+  <div class="words">
+    <div class="box principle">
+      <p class="label">THE BIG IDEA</p>
+      <h2>People don’t stay loyal to delivery apps. They stay out of habit.</h2>
+      <p>So every “out of stock” moment is a <b style="color:var(--sun)">free trial for a rival app</b>. The rival didn’t spend a rupee on ads. Blinkit’s empty shelf did the marketing for them.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 9 numbers -->
+<section class="slide">
+  <div class="art mid">
+    <div style="display:flex;flex-direction:column;gap:12px;align-items:center">
+      <div class="dots" id="dots" role="img" aria-label="100 dots: 94 green for items in stock, 6 red for items missing"></div>
+      <div class="legend"><span>In stock</span><span class="m">Missing</span></div>
+    </div>
+  </div>
+  <div class="words">
+    <div class="bubble">Was this just my mom?</div>
+    <p>Blinkit is actually the <b>best in India</b> at keeping things in stock. In a study of 150 everyday items, it had them about <b>94 times out of 100</b>. Zepto: about 82.</p>
+    <p class="beat" data-beat="1">But Blinkit delivers around <b>25 lakh orders every day</b>. Even 6 missing items in 100 adds up to a lot of “no milk” mornings.</p>
+    <p class="src">Sources: Bernstein study, via <a href="https://www.businesstoday.in/india/story/blinkit-leads-indias-quick-commerce-race-in-product-availability-beats-flipkart-minutes-bernstein-560865-2026-10-11">Business Today</a>; Zepto’s IPO filing, via <a href="https://startupfeed.in/quick-commerce-war-2026-blinkit-zepto-instamart-amazon-flipkart/">StartupFeed</a> (both Oct 2026).</p>
+  </div>
+</section>
+
+<!-- 10 calculator -->
+<section class="slide">
+  <div class="art mid">
+    <div class="calc">
+      <label for="r1"><span>Orders that hit an out-of-stock item<output id="o1">15%</output></span><input id="r1" type="range" min="5" max="30" value="15"></label>
+      <label for="r2"><span>Of those, people who open another app<output id="o2">10%</output></span><input id="r2" type="range" min="2" max="30" value="10"></label>
+      <label for="r3"><span>Of those, people who keep using it<output id="o3">20%</output></span><input id="r3" type="range" min="5" max="50" value="20"></label>
+      <div class="result"><b id="res">7,500</b><span>people a day start making the rival app their habit. That’s <b id="resY" style="display:inline;font-size:16px;color:#fff">27 lakh</b> a year.</span></div>
+    </div>
+  </div>
+  <div class="words">
+    <p class="kicker">HOW BIG IS THE LEAK?</p>
+    <h2>Play with the numbers.</h2>
+    <p>Start from Blinkit’s real 25 lakh orders a day. The three percentages are my guesses, so drag them and see.</p>
+    <span class="hint">Drag the sliders</span>
+    <p>Even at low settings, <b>thousands of people a day</b> drift away.</p>
+  </div>
+</section>
+
+<!-- 11 fixes overview -->
+<section class="slide one">
+  <div class="words" style="gap:24px">
+    <div class="intro-row">
+      <div class="fig" style="width:120px;flex-shrink:0" data-char="ruchi" data-mood="excited"></div>
+      <div class="bubble">So how would I fix it? Three small fixes: <b>before, during and after</b> the empty shelf.</div>
+    </div>
+    <div class="fixes">
+      <div class="fix"><small>FIX 1 · BEFORE</small><b>Stock Pulse</b><span>A heads-up before an item runs out</span></div>
+      <div class="fix"><small>FIX 2 · DURING</small><b>Smart Swap</b><span>The right replacement, in one tap</span></div>
+      <div class="fix"><small>FIX 3 · AFTER</small><b>Notify Me</b><span>A reason to come back to Blinkit</span></div>
+      <div class="fix found"><small>UNDER IT ALL</small><b>Honest stock data</b><span>If the app says “in stock”, it’s really on the shelf.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 12 stock pulse -->
+<section class="slide">
+  <div class="art mid">
+    <div class="phone pre" style="height:470px">
+      <div class="ap-top"><div class="ap-eta">Delivery in 12 mins<small>9:00 pm, the night before</small></div></div>
+      <div class="ap-title">Dairy &amp; Bread</div>
+      <div class="ap-grid">
+        <div class="pc"><div class="img" data-art="pouch"><span class="badge red">Only 3 left</span><button class="add" type="button">ADD</button></div><span class="price">₹32</span><span class="name">Amul Cow Milk</span></div>
+        <div class="pc"><div class="img" data-art="pouchB"><span class="badge amber">Selling fast</span><button class="add" type="button">ADD</button></div><span class="price">₹68</span><span class="name">Full Cream Milk</span></div>
+      </div>
+    </div>
+    <div class="tablet post">
+      <div class="scr">
+        <small>DARK STORE ALERT</small>
+        <b>Cow milk: only 8 left</b>
+        <div class="bar2"><i></i></div>
+        <span style="font-size:14px;color:var(--muted)">Selling about 15 an hour. Restock in the next 30 minutes.</span>
+        <span class="chip-s" style="align-self:flex-start;font-size:13px">Restock sent</span>
+      </div>
+    </div>
+  </div>
+  <div class="words">
+    <p class="kicker">FIX 1 · BEFORE IT RUNS OUT</p>
+    <h2>Stock Pulse</h2>
+    <p>The night before, Mom sees <b>“Only 3 left”</b> on her milk and adds it to her order.</p>
+    <button class="btn-soft pre" type="button" data-act="1">Show the store’s side</button>
+    <p class="beat" data-beat="1">The same signal warns the store to <b>restock before the shelf is empty</b>. One signal, two helpers.</p>
+  </div>
+</section>
+
+<!-- 13 smart swap -->
+<section class="slide">
+  <div class="art mid">
+    <div class="phone scrim">
+      <div class="sheet">
+        <strong>Amul Cow Milk just sold out</strong>
+        <span class="lbl">BEST MATCH FOR WHAT YOU NEED</span>
+        <div class="best"><div class="img" data-art="pouchC"></div><div class="t"><b>Another brand’s cow milk</b>500 ml · ₹30<div class="chips"><span class="chip-s">Same type</span><span class="chip-s">Same size</span></div></div></div>
+        <button class="cta" type="button" data-act="1"><span class="pre">Swap in one tap</span><span class="post">Added to cart</span></button>
+        <span style="font-size:12px;color:#55625C">Or tell me when Amul is back</span>
+      </div>
+      <div class="cart post">View cart · 1 item</div>
+    </div>
+  </div>
+  <div class="words">
+    <p class="kicker">FIX 2 · AT THE EMPTY SHELF</p>
+    <h2>Smart Swap</h2>
+    <p>Sold out anyway? Instead of a dead end, show <b>one best match</b>: same kind of milk, same size, similar price.</p>
+    <span class="hint pre">Tap “Swap in one tap”</span>
+    <div class="bubble beat" data-beat="1">Same milk, same size? <b>Fine. Done.</b></div>
+  </div>
+</section>
+
+<!-- 14 notify -->
+<section class="slide">
+  <div class="art mid">
+    <div class="phone">
+      <div class="pdp">
+        <div class="hero" data-art="pouch"></div>
+        <div class="facts"><div>Fat profile<b>Regular</b></div><div>Shelf life<b>2 days</b></div><div>Source<b>Cow milk</b></div></div>
+        <div class="info"><b>Amul Cow Milk</b><span style="font-size:13px;color:#6A726E">500 ml · ₹32</span></div>
+        <div class="bottom"><small>Out of stock</small><button class="notify" type="button" data-act="1"><span class="pre">Notify me</span><span class="post">We’ll tell you</span></button></div>
+      </div>
+      <div class="banner"><span class="ic"></span><div><b>Amul Cow Milk is back!</b>Back at your nearby store. Tap to add.</div></div>
+    </div>
+  </div>
+  <div class="words">
+    <p class="kicker">FIX 3 · AFTER</p>
+    <h2>Notify Me</h2>
+    <p>Want that exact milk? One tap, and Blinkit messages her <b>the moment it’s back</b>.</p>
+    <span class="hint pre">Tap “Notify me”</span>
+    <p class="beat" data-beat="1">Now Blinkit gives her a <b>reason to come back</b>, not a reason to leave. Limited to a few messages a day, so it never feels like spam.</p>
+  </div>
+</section>
+
+<!-- 15 replay -->
+<section class="slide">
+  <div class="art scene"><div class="fig full" data-char="momfull" data-mood="happy" data-pose="down"></div><div data-art="fridgeIn" data-milk="yes"></div></div>
+  <div class="words">
+    <div class="fig prop beat" data-beat="1" style="width:90px" data-art="chai"></div>
+    <h2>8:00 am, take two.</h2>
+    <p>Milk is in the fridge, ordered from Blinkit last night.</p>
+    <p class="beat" data-beat="1">Chai on time. <b>Habit intact.</b> The other app never gets its free trial.</p>
+  </div>
+</section>
+
+<!-- 16 ethics -->
+<section class="slide one">
+  <div class="words">
+    <p class="kicker">PLAYING FAIR</p>
+    <h2>Urgency, but only the honest kind.</h2>
+    <p>“Only 3 left” only helps if people can trust it. Which of these badges is fair? <b>Tap one.</b></p>
+    <div class="quiz">
+      <button class="qcard good" type="button" data-act="1">
+        <span class="mini"><i></i><b>Cow Milk · Only 3 left</b></span>
+        <p>Shown because the store really has 3 packs right now.</p>
+        <span class="verdict ok">Honest: it’s real information</span>
+      </button>
+      <button class="qcard bad" type="button" data-act="1">
+        <span class="mini"><i></i><b>Cow Milk · Only 3 left</b></span>
+        <p>Shown to everyone, all day, just to rush people.</p>
+        <span class="verdict no">Not okay: a trick, called a dark pattern</span>
+      </button>
+    </div>
+    <div class="promises beat" data-beat="1"><span>Badges use live store stock</span><span>Checked often to be sure they’re true</span><span>Swaps pick the best match, not the brand that pays most</span></div>
+  </div>
+</section>
+
+<!-- 17 star map -->
+<section class="slide">
+  <div class="art mid">
+    <div class="sky" id="sky">
+      <button class="star sel" type="button" data-k="ns" style="left:50%;top:44%"><svg width="64" height="64" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5l3.1 6.6 7.2.9-5.3 5 1.4 7.1L12 17.6 5.6 21.1 7 14l-5.3-5 7.2-.9z" fill="#FFD65A"/></svg><span>North Star</span></button>
+      <button class="star" type="button" data-k="p1" style="left:22%;top:22%"><svg width="34" height="34" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5l3.1 6.6 7.2.9-5.3 5 1.4 7.1L12 17.6 5.6 21.1 7 14l-5.3-5 7.2-.9z" fill="#FFE7A0"/></svg><span>Saved carts</span></button>
+      <button class="star" type="button" data-k="p2" style="left:78%;top:22%"><svg width="34" height="34" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5l3.1 6.6 7.2.9-5.3 5 1.4 7.1L12 17.6 5.6 21.1 7 14l-5.3-5 7.2-.9z" fill="#FFE7A0"/></svg><span>Quick exits</span></button>
+      <button class="star" type="button" data-k="s1" style="left:16%;top:62%"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5l3.1 6.6 7.2.9-5.3 5 1.4 7.1L12 17.6 5.6 21.1 7 14l-5.3-5 7.2-.9z" fill="#F3F0E2"/></svg><span>Swap yes-rate</span></button>
+      <button class="star" type="button" data-k="s2" style="left:84%;top:62%"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5l3.1 6.6 7.2.9-5.3 5 1.4 7.1L12 17.6 5.6 21.1 7 14l-5.3-5 7.2-.9z" fill="#F3F0E2"/></svg><span>Comebacks</span></button>
+      <button class="star" type="button" data-k="s3" style="left:50%;top:74%"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5l3.1 6.6 7.2.9-5.3 5 1.4 7.1L12 17.6 5.6 21.1 7 14l-5.3-5 7.2-.9z" fill="#F3F0E2"/></svg><span>Still here</span></button>
+      <button class="star shield" type="button" data-k="g" style="left:50%;top:92%"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8 3v6c0 5-3.4 9-8 11-4.6-2-8-6-8-11V5z" fill="#8FD3A8"/></svg><span>Safety checks</span></button>
+    </div>
+  </div>
+  <div class="words">
+    <p class="kicker">HOW I’D KNOW IT WORKS</p>
+    <h2>Follow the stars.</h2>
+    <span class="hint">Tap a star to see what it measures</span>
+    <div class="panel" id="panel"><small>NORTH STAR</small><b>Did Mom get her milk?</b><span>The share of orders that arrive complete, or with a swap the person was happy with. If this goes up, the fixes work.</span></div>
+    <div class="keyrow"><span>Big star: the one goal</span><span>Yellow: main signals</span><span>White: supporting signals</span></div>
+  </div>
+</section>
+
+<!-- 18 thanks -->
+<section class="slide">
+  <div class="art"><div class="fig bust" data-char="ruchi" data-mood="smile"></div></div>
+  <div class="words">
+    <p class="kicker">WHAT I’D FIND OUT FIRST</p>
+    <ul class="clean">
+      <li>How many “out of stock” moments really end with someone opening another app?</li>
+      <li>Do people trust an automatic swap, or want to say yes each time?</li>
+      <li>Should “Only 3 left” show to everyone, or only to people who buy that item?</li>
+    </ul>
+    <div class="bubble">Thanks for reading! I’m Ruchi, and I love finding the small moments that decide big habits.</div>
+    <div class="endlinks"><a class="go" href="index.html#projects">See more of my work →</a><a href="index.html#contact">Say hi</a></div>
+  </div>
+</section>
+
+<!-- 19 sources -->
+<section class="slide one">
+  <div class="words">
+    <p class="kicker">SOURCES AND NOTES</p>
+    <ol class="srcs">
+      <li><a href="https://www.businesstoday.in/india/story/blinkit-leads-indias-quick-commerce-race-in-product-availability-beats-flipkart-minutes-bernstein-560865-2026-10-11">Business Today, Oct 2026</a>: Bernstein study of 150 items; in-stock rates Blinkit 94.4%, Flipkart Minutes 88.7%, Instamart 83.8%, Zepto 82.5%.</li>
+      <li><a href="https://startupfeed.in/quick-commerce-war-2026-blinkit-zepto-instamart-amazon-flipkart/">StartupFeed, Oct 2026</a>, from Zepto’s IPO filing: Blinkit handled 916.6 million orders in FY26 (about 25 lakh a day).</li>
+      <li><a href="https://www.cxodigitalpulse.com/?p=33078">CXO Digital Pulse</a>: analysts on users shifting between apps as a driver of market share.</li>
+    </ol>
+    <p class="note">The story comes from my family’s experience. Characters, app screens and the store alert are my own illustrations and concepts. The percentages on the “Play with the numbers” page are guesses, not data.</p>
+    <div class="endlinks"><a class="go" href="index.html#projects">Back to Ruchi’s portfolio →</a></div>
+  </div>
+</section>
+
+    </div>
+  </main>
+  <nav class="nav" aria-label="Story navigation">
+    <button id="prev" type="button">← Back</button>
+    <div class="mid"><span class="count" id="count">1 / 19</span><span class="keys">Use ← → keys</span></div>
+    <button id="next" class="go" type="button">Next →</button>
+  </nav>
+</div>
+
+<script>
+(function(){
+  var STAR='M12 1.5l3.1 6.6 7.2.9-5.3 5 1.4 7.1L12 17.6 5.6 21.1 7 14l-5.3-5 7.2-.9z';
+  /* ---------- Mom (original character) ---------- */
+  function momHead(mood){
+    var skin='#EDB993', hair='#3A2A22', frame='#8A7266', lip='#8A3B2E';
+    function eye(cx,cy,dx,dy,r){ r=r||1; return '<ellipse cx="'+cx+'" cy="'+cy+'" rx="'+(6*r)+'" ry="'+(4.6*r)+'" fill="#fff"/><circle cx="'+(cx+dx)+'" cy="'+(cy+dy)+'" r="'+(r>1?2.6:3.3)+'" fill="#3B2418"/><circle cx="'+(cx+dx+1.1)+'" cy="'+(cy+dy-1.1)+'" r="1" fill="#fff"/>'; }
+    var eyes, brows, mouth, extra='';
+    if(mood==='sleepy'){
+      eyes='<path d="M78 94 Q84 98 90 94 M110 94 Q116 98 122 94" stroke="'+hair+'" stroke-width="2.6" fill="none" stroke-linecap="round"/>';
+      brows='<path d="M75 79 Q84 76 93 79 M107 79 Q116 76 125 79" stroke="'+hair+'" stroke-width="3" fill="none" stroke-linecap="round"/>';
+      mouth='<ellipse cx="100" cy="116" rx="4.5" ry="5.5" fill="'+lip+'"/>';
+    } else if(mood==='shocked'){
+      eyes=eye(84,93,0,0,1.35)+eye(116,93,0,0,1.35);
+      brows='<path d="M74 72 Q84 64 94 70 M106 70 Q116 64 126 72" stroke="'+hair+'" stroke-width="3.2" fill="none" stroke-linecap="round"/>';
+      mouth='<ellipse cx="100" cy="118" rx="6.5" ry="8.5" fill="'+lip+'"/>';
+      extra='<path d="M152 40 l4 -16 M164 52 l15 -8 M168 70 l16 0" stroke="#C8402A" stroke-width="3.5" stroke-linecap="round"/>';
+    } else if(mood==='annoyed'){
+      eyes=eye(84,94,0,1)+eye(116,94,0,1)+'<path d="M77 94 Q84 87 91 94 Z M109 94 Q116 87 123 94 Z" fill="'+skin+'"/><path d="M77 94 H91 M109 94 H123" stroke="'+hair+'" stroke-width="2.2" stroke-linecap="round"/>';
+      brows='<path d="M75 76 L93 81 M107 81 L125 76" stroke="'+hair+'" stroke-width="3.2" fill="none" stroke-linecap="round"/>';
+      mouth='<path d="M91 118 Q100 113 109 118" stroke="'+lip+'" stroke-width="3" fill="none" stroke-linecap="round"/>';
+    } else if(mood==='think'){
+      eyes=eye(84,93,1.5,-1.4)+eye(116,93,1.5,-1.4);
+      brows='<path d="M75 77 Q84 73 93 77 M107 73 Q116 68 125 74" stroke="'+hair+'" stroke-width="3" fill="none" stroke-linecap="round"/>';
+      mouth='<path d="M94 117 Q101 114 108 118" stroke="'+lip+'" stroke-width="3" fill="none" stroke-linecap="round"/>';
+    } else {
+      eyes='<path d="M78 95 Q84 88 90 95 M110 95 Q116 88 122 95" stroke="'+hair+'" stroke-width="2.8" fill="none" stroke-linecap="round"/>';
+      brows='<path d="M75 76 Q84 71 93 75 M107 75 Q116 71 125 76" stroke="'+hair+'" stroke-width="3" fill="none" stroke-linecap="round"/>';
+      mouth='<path d="M88 110 Q100 125 112 110 Z" fill="'+lip+'"/><path d="M92 111 H108" stroke="#fff" stroke-width="2.4"/>';
+    }
+    return '<ellipse cx="100" cy="86" rx="41" ry="42" fill="'+hair+'"/>'+
+      '<ellipse cx="64" cy="96" rx="6" ry="9" fill="'+skin+'"/><ellipse cx="136" cy="96" rx="6" ry="9" fill="'+skin+'"/>'+
+      '<circle cx="64" cy="107" r="3" fill="#E2B95C"/><circle cx="136" cy="107" r="3" fill="#E2B95C"/>'+
+      '<ellipse cx="100" cy="92" rx="36" ry="40" fill="'+skin+'"/>'+
+      '<path d="M63 92 C58 58 80 44 100 46 C120 44 142 58 137 92 C131 74 118 64 101 57 C85 64 69 74 63 92 Z" fill="'+hair+'"/>'+
+      '<path d="M100 47 Q98 54 101 58" stroke="#5A463C" stroke-width="1.6" fill="none"/>'+
+      '<ellipse cx="77" cy="108" rx="6.5" ry="3.8" fill="#E38A80" opacity=".45"/><ellipse cx="123" cy="108" rx="6.5" ry="3.8" fill="#E38A80" opacity=".45"/>'+
+      brows+eyes+
+      '<path d="M100 98 Q97 105 101 106" stroke="#C98B6B" stroke-width="1.8" fill="none" stroke-linecap="round"/>'+
+      '<rect x="72" y="84" width="24" height="19" rx="9.5" fill="none" stroke="'+frame+'" stroke-width="2.3"/>'+
+      '<rect x="104" y="84" width="24" height="19" rx="9.5" fill="none" stroke="'+frame+'" stroke-width="2.3"/>'+
+      '<path d="M96 92 Q100 89 104 92" stroke="'+frame+'" stroke-width="2.3" fill="none"/>'+
+      mouth+extra;
+  }
+  function floral(points){
+    var s=''; points.forEach(function(d){ s+='<circle cx="'+d[0]+'" cy="'+d[1]+'" r="3.4" fill="#E58B6B"/><circle cx="'+(d[0]+5)+'" cy="'+(d[1]+3)+'" r="2" fill="#9DBF8E"/>'; }); return s;
+  }
+  function momBust(mood){
+    return '<svg viewBox="0 0 200 240" role="img" aria-label="Mom, an illustrated character">'+
+      '<ellipse cx="100" cy="128" rx="25" ry="15" fill="#3A2A22"/>'+
+      '<path d="M34 240 C36 186 60 152 100 150 C140 152 164 186 166 240 Z" fill="#F8DECB"/>'+
+      floral([[58,204],[76,182],[70,224],[92,206],[142,192],[150,222],[132,214],[54,232],[100,232],[112,186]])+
+      '<path d="M120 152 C146 158 162 196 158 240 L122 240 C130 204 128 176 108 151 Z" fill="#F3C9AE"/>'+
+      '<path d="M108 151 C128 176 130 204 122 240" stroke="#E08E6D" stroke-width="5" fill="none"/>'+
+      '<rect x="89" y="116" width="22" height="36" rx="9" fill="#DFA27F"/>'+
+      '<path d="M88 150 Q100 162 112 150" stroke="#E2B95C" stroke-width="1.8" fill="none"/>'+
+      momHead(mood)+'</svg>';
+  }
+  function momFull(mood,pose){
+    var skin='#E3AB86';
+    var armR = pose==='reach'
+      ? '<path d="M128 176 C150 192 172 196 200 190" stroke="'+skin+'" stroke-width="13" fill="none" stroke-linecap="round"/><circle cx="202" cy="190" r="8" fill="'+skin+'"/>'
+      : '<path d="M128 176 C138 214 140 250 136 282" stroke="'+skin+'" stroke-width="13" fill="none" stroke-linecap="round"/><circle cx="136" cy="286" r="8" fill="'+skin+'"/>';
+    return '<svg viewBox="0 0 212 410" role="img" aria-label="Mom, an illustrated character">'+
+      '<ellipse cx="100" cy="128" rx="25" ry="15" fill="#3A2A22"/>'+
+      '<path d="M72 176 C62 214 60 250 64 282" stroke="'+skin+'" stroke-width="13" fill="none" stroke-linecap="round"/><circle cx="64" cy="286" r="8" fill="'+skin+'"/>'+
+      '<path d="M54 410 C52 310 58 210 70 172 C80 154 120 154 130 172 C142 210 148 310 146 410 Z" fill="#F8DECB"/>'+
+      floral([[72,210],[90,236],[80,270],[104,258],[120,300],[74,320],[96,346],[128,350],[110,214],[86,380],[124,388]])+
+      '<path d="M86 330 V398 M100 326 V398 M114 330 V398" stroke="#EBC1A3" stroke-width="2"/>'+
+      '<rect x="55" y="396" width="90" height="12" rx="3" fill="#E08E6D"/>'+
+      '<path d="M116 158 C140 168 152 226 148 300 L124 296 C128 236 124 196 104 160 Z" fill="#F3C9AE"/>'+
+      '<path d="M104 160 C124 196 128 236 124 296" stroke="#E08E6D" stroke-width="5" fill="none"/>'+
+      armR+
+      '<rect x="89" y="116" width="22" height="44" rx="9" fill="#DFA27F"/>'+
+      '<path d="M88 156 Q100 168 112 156" stroke="#E2B95C" stroke-width="1.8" fill="none"/>'+
+      momHead(mood)+'</svg>';
+  }
+  /* ---------- Ruchi (original character) ---------- */
+  function ruchi(mood){
+    var skin='#D9A07D', hair='#1B1617', lip='#7A2E2C';
+    function eye(cx){ return '<ellipse cx="'+cx+'" cy="98" rx="6" ry="4.6" fill="#fff"/><circle cx="'+(cx+.5)+'" cy="98.5" r="3.4" fill="#2B1A14"/><circle cx="'+(cx+1.6)+'" cy="97.3" r="1.1" fill="#fff"/><path d="M'+(cx-7)+' 96 Q'+cx+' 91.5 '+(cx+7)+' 96 l3 -2" stroke="'+hair+'" stroke-width="2.4" fill="none" stroke-linecap="round"/>'; }
+    var mouth = (mood==='excited'||mood==='wave')
+      ? '<path d="M91 120 Q102 136 113 120 Z" fill="'+lip+'"/><path d="M95 121 H109" stroke="#fff" stroke-width="2.4"/>'
+      : '<path d="M92 121 Q102 130 112 121" stroke="'+lip+'" stroke-width="3" fill="none" stroke-linecap="round"/>';
+    var wave = mood==='wave'
+      ? '<g class="wave-hand"><path d="M150 214 C168 200 182 182 186 160" stroke="#2A2E2C" stroke-width="20" fill="none" stroke-linecap="round"/>'+
+        '<rect x="174" y="118" width="7" height="22" rx="3.5" fill="'+skin+'"/><rect x="182" y="113" width="7" height="26" rx="3.5" fill="'+skin+'"/><rect x="190" y="115" width="7" height="25" rx="3.5" fill="'+skin+'"/><rect x="198" y="121" width="7" height="21" rx="3.5" fill="'+skin+'"/>'+
+        '<rect x="160" y="138" width="22" height="8" rx="4" transform="rotate(-30 171 142)" fill="'+skin+'"/>'+
+        '<rect x="173" y="132" width="34" height="30" rx="12" fill="'+skin+'"/></g>'+
+        '<path d="M210 104 l12 -8 M214 122 l14 0 M210 140 l12 8" stroke="#1B1617" stroke-width="3" stroke-linecap="round"/>'
+      : '';
+    var vb = mood==='wave' ? '0 0 232 250' : '0 0 204 250';
+    var mood2 = mood==='wave' ? 'excited' : mood;
+    return '<svg viewBox="'+vb+'" role="img" aria-label="Ruchi, the narrator, an illustrated character'+(mood==='wave'?', waving hello':'')+'">'+
+      '<path d="M38 250 C24 196 28 134 44 92 C56 54 80 32 104 32 C130 32 154 52 162 92 C176 136 180 196 168 250 Z" fill="'+hair+'"/>'+
+      '<path d="M54 120 Q46 170 54 230 M152 120 Q160 170 152 232" stroke="#3A3133" stroke-width="2" fill="none"/>'+
+      '<path d="M40 250 C44 200 68 176 102 174 C136 176 160 200 164 250 Z" fill="#2A2E2C"/>'+
+      '<rect x="88" y="124" width="28" height="34" rx="8" fill="#C7896A"/><ellipse cx="102" cy="138" rx="14" ry="6" fill="#B5775A" opacity=".55"/>'+
+      '<path d="M80 150 Q102 160 124 150 L126 178 Q102 188 78 178 Z" fill="#141615"/>'+
+      '<path d="M82 188 Q102 206 122 188" stroke="#D5DADC" stroke-width="1.6" fill="none"/><circle cx="102" cy="201" r="3.2" fill="#F4F5F3"/>'+
+      '<ellipse cx="102" cy="96" rx="35" ry="41" fill="'+skin+'"/>'+
+      '<path d="M66 104 C64 64 84 42 104 42 C126 42 144 62 140 102 C134 80 122 64 108 58 C96 70 82 84 66 104 Z" fill="'+hair+'"/>'+
+      '<path d="M66 100 C60 130 62 160 70 182 L58 186 C48 160 50 124 60 98 Z" fill="'+hair+'"/>'+
+      '<path d="M140 98 C146 128 144 160 136 184 L148 188 C158 160 156 124 146 96 Z" fill="'+hair+'"/>'+
+      '<path d="M82 58 Q72 80 70 104 M126 56 Q138 76 140 98" stroke="#3A3133" stroke-width="2" fill="none"/>'+
+      '<ellipse cx="80" cy="113" rx="7" ry="4" fill="#E58F86" opacity=".5"/><ellipse cx="124" cy="113" rx="7" ry="4" fill="#E58F86" opacity=".5"/>'+
+      '<path d="M76 83 Q85 78 94 81 M110 81 Q119 78 128 83" stroke="'+hair+'" stroke-width="3.4" fill="none" stroke-linecap="round"/>'+
+      eye(85)+eye(119)+
+      '<path d="M102 103 Q99 110 103 111" stroke="#B97B5E" stroke-width="1.8" fill="none" stroke-linecap="round"/>'+
+      '<rect x="72" y="88" width="27" height="21" rx="5" fill="rgba(255,255,255,.14)" stroke="#111" stroke-width="4.5"/>'+
+      '<rect x="105" y="88" width="27" height="21" rx="5" fill="rgba(255,255,255,.14)" stroke="#111" stroke-width="4.5"/>'+
+      '<path d="M99 97 L105 97" stroke="#111" stroke-width="4"/>'+
+      mouth+wave+'</svg>';
+  }
+  /* ---------- props ---------- */
+  function pouch(c1,c2){ return '<svg viewBox="0 0 60 70" aria-hidden="true"><path d="M8 10 Q30 2 52 10 Q58 35 52 60 Q30 68 8 60 Q2 35 8 10 Z" fill="'+c1+'" stroke="#C9CFCC" stroke-width="1.5"/><path d="M8 38 Q30 32 52 38 L51 50 Q30 44 9 50 Z" fill="'+c2+'"/><rect x="18" y="16" width="24" height="10" rx="3" fill="#fff" opacity=".8"/></svg>'; }
+  function fridgeIn(milk){
+    var milkSpot = milk==='yes'
+      ? '<g><path d="M40 118 Q60 112 80 118 Q84 140 80 164 Q60 170 40 164 Q36 140 40 118 Z" fill="#F4F7FA" stroke="#C9CFCC" stroke-width="1.5"/><path d="M40 144 Q60 139 80 144 L79 152 Q60 147 41 152 Z" fill="#5C8DD6"/></g>'
+      : '<rect x="38" y="114" width="44" height="52" rx="8" fill="none" stroke="#C8402A" stroke-width="2.5" stroke-dasharray="6 5"/><text x="60" y="145" text-anchor="middle" font-family="Nunito, sans-serif" font-weight="800" font-size="13" fill="#C8402A">milk?</text>';
+    return '<svg viewBox="0 0 240 300" role="img" aria-label="'+(milk==='yes'?'An open fridge with milk on the shelf':'An open fridge full of food, but the milk spot is empty')+'">'+
+      '<rect x="10" y="10" width="220" height="280" rx="16" fill="#DDE7E2" stroke="#1E2B29" stroke-width="5"/>'+
+      '<rect x="22" y="22" width="196" height="256" rx="10" fill="#FFF9E6"/>'+
+      '<path d="M22 100 H218 M22 172 H218 M22 238 H218" stroke="#C7D3CD" stroke-width="5"/>'+
+      '<g stroke="#FFC83D" stroke-width="3" stroke-linecap="round" opacity=".7"><path d="M120 30 v10 M100 34 l-6 -6 M140 34 l6 -6"/></g>'+
+      '<rect x="32" y="74" width="66" height="22" rx="4" fill="#E9D6B8"/><circle cx="44" cy="78" r="6" fill="#FFF6E8"/><circle cx="58" cy="78" r="6" fill="#FFF6E8"/><circle cx="72" cy="78" r="6" fill="#FFF6E8"/><circle cx="86" cy="78" r="6" fill="#FFF6E8"/>'+
+      '<rect x="112" y="52" width="28" height="44" rx="6" fill="#C8402A"/><rect x="110" y="48" width="32" height="10" rx="3" fill="#E9D6B8"/>'+
+      '<rect x="152" y="66" width="56" height="30" rx="6" fill="#9CC7E8"/><rect x="150" y="62" width="60" height="8" rx="3" fill="#5C8DD6"/>'+
+      milkSpot+
+      '<circle cx="104" cy="158" r="10" fill="#E2553B"/><circle cx="122" cy="160" r="9" fill="#E8674C"/><circle cx="113" cy="146" r="8" fill="#D94A31"/>'+
+      '<path d="M146 168 C140 140 156 128 166 140 C176 126 192 140 184 168 Z" fill="#4E9A54"/>'+
+      '<rect x="190" y="148" width="22" height="20" rx="3" fill="#F7D75E"/>'+
+      '<rect x="32" y="196" width="78" height="40" rx="14" fill="#C88A55"/><path d="M48 204 v24 M64 204 v24 M80 204 v24 M96 204 v24" stroke="#A86F3E" stroke-width="2"/>'+
+      '<rect x="126" y="180" width="22" height="56" rx="6" fill="#BFE0F2"/><rect x="130" y="174" width="14" height="10" rx="2" fill="#5C8DD6"/>'+
+      '<path d="M162 236 L206 236 L184 200 Z" fill="#F7D75E"/>'+
+      '<rect x="32" y="246" width="176" height="26" rx="6" fill="#E3ECE7"/><path d="M60 262 l18 -10 M84 264 l18 -10 M108 262 l18 -10" stroke="#E98A3C" stroke-width="7" stroke-linecap="round"/>'+
+      '</svg>';
+  }
+  var ART={
+    clock:'<svg viewBox="0 0 200 200" role="img" aria-label="Clock showing 8 o’clock"><circle cx="100" cy="100" r="80" fill="#fff" stroke="#1E2B29" stroke-width="8"/><path d="M100 30 v12 M100 158 v12 M30 100 h12 M158 100 h12" stroke="#1E2B29" stroke-width="5" stroke-linecap="round"/><path d="M100 100 L100 46" stroke="#1E2B29" stroke-width="6" stroke-linecap="round"/><path d="M100 100 L66 120" stroke="#C8402A" stroke-width="8" stroke-linecap="round"/><circle cx="100" cy="100" r="7" fill="#1E2B29"/></svg>',
+    fridgeShut:'<svg viewBox="0 0 240 300" role="img" aria-label="A closed fridge"><rect x="10" y="10" width="220" height="280" rx="16" fill="#E5EEEA" stroke="#1E2B29" stroke-width="5"/><path d="M15 98 H225" stroke="#C5D3CC" stroke-width="4"/><rect x="26" y="106" width="9" height="64" rx="5" fill="#1E2B29"/></svg>',
+    scooter:'<svg viewBox="0 0 200 160" role="img" aria-label="Delivery scooter"><circle cx="50" cy="124" r="22" fill="#1E2B29"/><circle cx="50" cy="124" r="9" fill="#CBD8CF"/><circle cx="156" cy="124" r="22" fill="#1E2B29"/><circle cx="156" cy="124" r="9" fill="#CBD8CF"/><path d="M40 112 H120 L140 80 H160 L172 112" stroke="#5B3FA6" stroke-width="10" fill="none" stroke-linejoin="round" stroke-linecap="round"/><rect x="30" y="56" width="58" height="50" rx="8" fill="#B9A6E6" stroke="#1E2B29" stroke-width="4"/><path d="M150 80 L146 52 H164" stroke="#1E2B29" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M8 70 h20 M2 88 h22" stroke="#9BB3A8" stroke-width="5" stroke-linecap="round"/></svg>',
+    chai:'<svg viewBox="0 0 200 180" role="img" aria-label="A cup of chai"><path d="M40 70 H140 L130 150 Q128 162 116 162 H64 Q52 162 50 150 Z" fill="#fff" stroke="#1E2B29" stroke-width="5" stroke-linejoin="round"/><path d="M46 84 H134 L128 140 H52 Z" fill="#C88A55"/><path d="M140 86 Q172 90 164 114 Q158 132 134 128" stroke="#1E2B29" stroke-width="5" fill="none"/><path d="M76 52 Q66 38 78 26 M100 52 Q90 36 102 22 M124 52 Q114 38 126 26" stroke="#9BB3A8" stroke-width="5" fill="none" stroke-linecap="round"/></svg>',
+    pouch:pouch('#FBEFF1','#E58FA0'),
+    pouchB:pouch('#F4F7FA','#E8B23C'),
+    pouchC:pouch('#F4F7FA','#5C8DD6'),
+    bread:'<svg viewBox="0 0 60 50" aria-hidden="true"><rect x="6" y="10" width="48" height="32" rx="12" fill="#C88A55"/><path d="M18 16 v20 M30 16 v20 M42 16 v20" stroke="#A86F3E" stroke-width="2"/></svg>',
+    curd:'<svg viewBox="0 0 60 56" aria-hidden="true"><path d="M10 14 H50 L46 50 H14 Z" fill="#fff" stroke="#C9CFCC" stroke-width="1.5"/><rect x="8" y="8" width="44" height="8" rx="3" fill="#5C8DD6"/></svg>'
+  };
+  document.querySelectorAll('[data-char]').forEach(function(el){
+    var c=el.dataset.char, m=el.dataset.mood;
+    el.innerHTML = c==='mom' ? momBust(m) : c==='momfull' ? momFull(m, el.dataset.pose) : ruchi(m);
+  });
+  document.querySelectorAll('[data-art]').forEach(function(el){
+    var a=el.dataset.art;
+    var svg = a==='fridgeIn' ? fridgeIn(el.dataset.milk) : (ART[a]||'');
+    if(el.querySelector('button')){ el.insertAdjacentHTML('afterbegin', svg); }
+    else if(a==='fridgeIn' && !el.parentNode.classList.contains('fridge')){ el.innerHTML='<div class="fridge">'+svg+'</div>'; }
+    else { el.innerHTML = svg; }
+  });
+  var dots=document.getElementById('dots');
+  for(var d=0; d<100; d++){ var dot=document.createElement('i'); if(d>=94) dot.className='miss'; dots.appendChild(dot); }
+
+  /* ---------- calculator ---------- */
+  function fmt(n){ return Math.round(n).toLocaleString('en-IN'); }
+  function lakh(n){ var l=n/100000; return (l>=10? Math.round(l) : Math.round(l*10)/10)+' lakh'; }
+  function calc(){
+    var a=+r1.value, b2=+r2.value, c=+r3.value;
+    o1.textContent=a+'%'; o2.textContent=b2+'%'; o3.textContent=c+'%';
+    var day=2500000*a/100*b2/100*c/100;
+    res.textContent=fmt(day); resY.textContent=lakh(day*365);
+  }
+  var r1=document.getElementById('r1'), r2=document.getElementById('r2'), r3=document.getElementById('r3');
+  var o1=document.getElementById('o1'), o2=document.getElementById('o2'), o3=document.getElementById('o3');
+  var res=document.getElementById('res'), resY=document.getElementById('resY');
+  [r1,r2,r3].forEach(function(r){ r.addEventListener('input', calc); });
+  calc();
+
+  /* ---------- star map ---------- */
+  var INFO={
+    ns:['NORTH STAR','Did Mom get her milk?','The share of orders that arrive complete, or with a swap the person was happy with. If this goes up, the fixes work.'],
+    p1:['MAIN SIGNAL','Saved carts','Of the carts that hit an out-of-stock item, how many still get ordered. Smart Swap should push this up.'],
+    p2:['MAIN SIGNAL','Quick exits','People who close the app within 2 minutes of seeing “out of stock” and don’t order. A hint they went to another app. This should go down.'],
+    s1:['SUPPORTING SIGNAL','Swap yes-rate','How often people accept the suggested swap. Tells us if the matches are actually good.'],
+    s2:['SUPPORTING SIGNAL','Comebacks','Orders that come from “It’s back in stock” messages.'],
+    s3:['SUPPORTING SIGNAL','Still here','Do people who hit an out-of-stock item keep ordering over the next 30 days? This is the habit itself.'],
+    g:['SAFETY CHECKS','Make sure nothing gets worse','Order size and refunds stay healthy, people don’t mute the notifications, and “Only 3 left” badges are true.']
+  };
+  var panel=document.getElementById('panel');
+  document.querySelectorAll('.star').forEach(function(s){
+    s.addEventListener('click', function(e){
+      e.stopPropagation();
+      document.querySelectorAll('.star').forEach(function(x){ x.classList.remove('sel'); });
+      s.classList.add('sel');
+      var t=INFO[s.dataset.k];
+      panel.innerHTML='<small>'+t[0]+'</small><b>'+t[1]+'</b><span>'+t[2]+'</span>';
+    });
+  });
+
+  /* ---------- navigation ---------- */
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var i=0, b=0;
+  var bar=document.getElementById('progress'), count=document.getElementById('count');
+  var prevBtn=document.getElementById('prev'), nextBtn=document.getElementById('next');
+  var sideL=document.getElementById('sideL'), sideR=document.getElementById('sideR');
+  function maxBeat(s){ var m=0; s.querySelectorAll('.beat').forEach(function(e){ m=Math.max(m,+e.dataset.beat||0); }); if(s.querySelector('[data-act]')) m=Math.max(m,1); return m; }
+  function render(){
+    slides.forEach(function(s,k){ s.hidden = k!==i; });
+    var s=slides[i];
+    s.querySelectorAll('.beat').forEach(function(e){ e.classList.toggle('on', (+e.dataset.beat) <= b); });
+    for(var n=1;n<=3;n++){ s.classList.toggle('b'+n, b>=n); }
+    var total=slides.length, atEnd = i===total-1 && b>=maxBeat(s), atStart = i===0 && b===0;
+    bar.style.width=((i+1)/total*100)+'%';
+    count.textContent=(i+1)+' / '+total;
+    prevBtn.disabled=atStart; sideL.disabled=atStart;
+    nextBtn.disabled=atEnd; sideR.disabled=atEnd;
+    nextBtn.textContent = i===0 ? 'Start →' : 'Next →';
+    try{ history.replaceState(null,'','#slide-'+(i+1)); }catch(e){}
+  }
+  function next(){ if(b<maxBeat(slides[i])){ b++; } else if(i<slides.length-1){ i++; b=0; } render(); }
+  function prev(){ if(b>0){ b--; } else if(i>0){ i--; b=maxBeat(slides[i]); } render(); }
+  function hold(e){ e.stopPropagation(); }
+  [nextBtn,sideR].forEach(function(x){ x.addEventListener('click', function(e){ hold(e); next(); }); });
+  [prevBtn,sideL].forEach(function(x){ x.addEventListener('click', function(e){ hold(e); prev(); }); });
+  document.querySelectorAll('[data-act]').forEach(function(el){
+    el.addEventListener('click', function(e){ hold(e); if(b<1){ b=1; render(); } });
+  });
+  document.querySelectorAll('input,label,.phone,.tablet,.sky,.calc').forEach(function(el){
+    el.addEventListener('click', hold);
+  });
+  document.getElementById('stage').addEventListener('click', function(e){
+    if(e.target.closest('a')) return;
+    var r=this.getBoundingClientRect();
+    if(e.clientX < r.left + r.width*0.22) prev(); else next();
+  });
+  function onKey(e){
+    var t=e.target;
+    if(t && t.tagName==='INPUT' && (e.key==='ArrowLeft'||e.key==='ArrowRight')) return;
+    if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key==='PageDown'||(e.key===' '&&!(t&&t.tagName==='BUTTON'))){ e.preventDefault(); next(); }
+    else if(e.key==='ArrowLeft'||e.key==='ArrowUp'||e.key==='PageUp'){ e.preventDefault(); prev(); }
+  }
+  window.addEventListener('keydown', onKey);
+  var appEl=document.getElementById('app');
+  function grabFocus(){ try{ if(!document.activeElement || document.activeElement===document.body) appEl.focus({preventScroll:true}); }catch(e){} }
+  window.addEventListener('load', grabFocus);
+  document.addEventListener('pointerdown', function(e){ if(!e.target.closest('input,button,a')) setTimeout(grabFocus,0); });
+  var sx=null;
+  document.addEventListener('touchstart', function(e){ sx=e.touches[0].clientX; }, {passive:true});
+  document.addEventListener('touchend', function(e){
+    if(sx===null) return; var dx=e.changedTouches[0].clientX-sx; sx=null;
+    if(e.target.closest('input')) return;
+    if(Math.abs(dx)>60){ dx<0 ? next() : prev(); }
+  });
+  function fromHash(){
+    var m=/^#slide-(\d+)$/.exec(location.hash||'');
+    if(m){ var n=Math.min(Math.max(+m[1]-1,0),slides.length-1); if(n!==i){ i=n; b=0; } }
+  }
+  fromHash();
+  window.addEventListener('hashchange', function(){ fromHash(); render(); });
+  render();
+  grabFocus();
+})();
+</script>
+</body>
+</html>

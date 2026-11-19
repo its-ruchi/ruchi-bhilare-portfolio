@@ -333,12 +333,15 @@ img {
 
 /* Avatar Character */
 .avatar-character {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-left: 30px;
   margin-bottom: 10px;
-  animation: float 3s ease-in-out infinite;
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 @keyframes float {
@@ -354,84 +357,123 @@ img {
   100% { transform: translateY(0) rotate(0deg); }
 }
 
-.avatar-head {
-  position: relative;
-  width: 44px;
-  height: 44px;
-}
-
-.avatar-hair {
-  position: absolute;
-  top: -4px;
-  left: 4px;
-  width: 36px;
-  height: 24px;
-  background: #2A2520;
-  border-radius: 18px 18px 0 0;
-}
-
-.avatar-face {
-  position: absolute;
-  top: 10px;
-  left: 6px;
-  width: 32px;
-  height: 32px;
-  background: #D4A574;
-  border-radius: 50%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-}
-
-.avatar-eyes {
-  display: flex;
-  gap: 8px;
-  margin-top: -2px;
-}
-
-.avatar-eye {
-  width: 4px;
-  height: 4px;
-  background: #2A2520;
-  border-radius: 50%;
-}
-
-.avatar-smile {
-  width: 10px;
-  height: 5px;
-  border-bottom: 2px solid #2A2520;
-  border-radius: 0 0 10px 10px;
-}
-
-.avatar-body {
-  width: 52px;
-  height: 50px;
-  background: var(--accent-green);
-  border-radius: 12px 12px 8px 8px;
-  margin-top: -4px;
-}
-
-.avatar-legs {
-  display: flex;
-  gap: 6px;
-  margin-top: -2px;
-}
-
-.avatar-leg {
-  width: 14px;
-  height: 30px;
-  background: #2A2A2A;
-  border-radius: 0 0 4px 4px;
+.avatar-svg {
+  display: block;
+  height: 230px;
+  width: auto;
+  overflow: visible;
+  filter: drop-shadow(0 10px 14px rgba(0,0,0,0.35));
 }
 
 .avatar-shadow {
-  width: 60px;
-  height: 10px;
-  background: radial-gradient(ellipse, rgba(0,0,0,0.4) 0%, transparent 70%);
-  margin-top: 4px;
+  width: 100px;
+  height: 14px;
+  background: radial-gradient(ellipse, rgba(0,0,0,0.55) 0%, transparent 70%);
+  margin-top: -10px;
 }
+
+/* Idle life: breathing, hair sway, a slow head tilt */
+.av-upper {
+  transform-box: view-box;
+  transform-origin: 100px 300px;
+  animation: av-breathe 4.2s ease-in-out infinite;
+}
+.av-hair-back {
+  transform-box: view-box;
+  transform-origin: 100px 70px;
+  animation: av-sway 5.5s ease-in-out infinite;
+}
+.av-head {
+  transform-box: view-box;
+  transform-origin: 100px 135px;
+  transition: transform 0.35s ease-out;
+}
+.av-head-idle {
+  transform-box: view-box;
+  transform-origin: 100px 135px;
+  animation: av-tilt 7s ease-in-out infinite;
+}
+@keyframes av-breathe { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.014); } }
+@keyframes av-sway { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(0.9deg); } }
+@keyframes av-tilt { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(1.6deg); } }
+
+/* Eyes: blink + follow the cursor (set from JS) */
+.av-eye {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 0.07s ease;
+}
+.avatar-character.blink .av-eye { transform: scaleY(0.1); }
+.av-pupil { transition: transform 0.12s ease-out; }
+
+/* Mouth: smile, or open while she talks */
+.av-open { opacity: 0; }
+.avatar-character.talking .av-open { opacity: 1; }
+.avatar-character.talking .av-smile { opacity: 0; }
+
+/* Wave: raise the arm, then wiggle it */
+.av-arm-wave,
+.av-arm-wave-inner {
+  transform-box: view-box;
+  transform-origin: 133px 158px;
+}
+.av-arm-wave { transition: transform 0.4s cubic-bezier(0.3, 0.7, 0.3, 1); }
+.avatar-character.waving .av-arm-wave { transform: rotate(-145deg); }
+.avatar-character.waving .av-arm-wave-inner { animation: av-wave 0.9s ease-in-out 0.3s infinite; }
+@keyframes av-wave { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-16deg); } }
+
+/* A little hop when you click her */
+.avatar-character.hop .avatar-svg { animation: av-hop 0.45s ease-out; }
+@keyframes av-hop { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-10px); } }
+
+/* Speech bubble */
+.avatar-bubble {
+  position: absolute;
+  bottom: calc(100% - 4px);
+  left: 50%;
+  transform: translate(-50%, 8px);
+  background: #F5F2EC;
+  color: #1C1A17;
+  font-family: var(--font-serif);
+  font-size: 16px;
+  line-height: 1.2;
+  padding: 8px 14px;
+  border-radius: 14px;
+  white-space: nowrap;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.avatar-bubble::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  width: 12px;
+  height: 12px;
+  background: #F5F2EC;
+  transform: translateX(-50%) rotate(45deg);
+}
+.avatar-bubble.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.avatar-character:focus-visible .avatar-svg {
+  filter: drop-shadow(0 0 6px var(--accent-gold));
+}
+
+@media (max-width: 600px) {
+  .avatar-svg { height: 180px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .av-upper, .av-hair-back, .av-head-idle,
+  .avatar-character.waving .av-arm-wave-inner,
+  .avatar-character.hop .avatar-svg { animation: none; }
+}
+
 
 /* Door CTA */
 .door-cta {
@@ -656,9 +698,9 @@ img {
 /* Door Cards */
 .door-cards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
-  max-width: 900px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+  max-width: 960px;
 }
 
 .door-card {
@@ -1222,25 +1264,24 @@ img {
   display: contents;
 }
 
-/* Five projects: three equal cards, then two balanced cards. */
+/* Projects (4 builds) and Case Studies (2) both sit in balanced two-column rows. */
 .projects-grid {
   grid-template-columns: repeat(6, minmax(0, 1fr));
 }
 
 .project-card {
-  grid-column: span 2;
+  grid-column: span 3;
   min-height: 270px;
   display: flex;
   flex-direction: column;
 }
 
-.project-card-featured {
-  grid-row: auto;
+.section-case-studies {
+  padding-top: 0;
 }
 
-.project-card[data-project="3"],
-.project-card[data-project="4"] {
-  grid-column: span 3;
+.project-card-featured {
+  grid-row: auto;
 }
 
 .project-card-featured .project-quote {
@@ -1451,6 +1492,39 @@ img {
 .skill-dot {
   color: var(--accent-terracotta);
   margin: 0 8px;
+}
+
+/* Ways of working: short first-person lines instead of keywords */
+.toolkit-content.ways {
+  flex-direction: column;
+  gap: 0;
+}
+
+.way-item {
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  line-height: 1.4;
+}
+
+.way-item:first-child {
+  padding-top: 0;
+}
+
+.way-item:last-child {
+  border-bottom: none;
+}
+
+.way-lead {
+  font-family: var(--font-serif);
+  font-size: clamp(20px, 2vw, 26px);
+  color: var(--text-dark);
+}
+
+.way-note {
+  display: block;
+  margin-top: 2px;
+  font-size: 15px;
+  color: var(--text-muted-dark);
 }
 
 /* Certifications */
@@ -1693,6 +1767,12 @@ img {
   font-family: var(--font-serif);
   font-size: 28px;
   font-weight: 400;
+  margin-bottom: 16px;
+}
+
+.resume-download {
+  display: inline-block;
+  text-decoration: none;
   margin-bottom: 24px;
 }
 
@@ -1775,9 +1855,7 @@ img {
     grid-row: auto;
   }
 
-  .project-card,
-  .project-card[data-project="3"],
-  .project-card[data-project="4"] {
+  .project-card {
     grid-column: auto;
     min-height: 0;
   }
@@ -1787,8 +1865,9 @@ img {
   }
   
   .door-cards {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 20px;
+    max-width: 480px;
   }
   
   .likes-grid {
