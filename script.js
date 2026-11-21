@@ -148,6 +148,19 @@ const projectData = [
     ],
     link: "blinkit-case-study.html",
     linkLabel: "PLAY THE INTERACTIVE STORY ↗"
+  },
+  {
+    eyebrow: "UI RESEARCH · FIRST IMPRESSIONS",
+    title: "Regain Case Study",
+    sections: [
+      { label: "THE PREMISE", text: "First impression is the last impression. People download a focus app because they want to start focusing, and every screen before that is a chance to give up and close it." },
+      { label: "THE METHOD", text: "I downloaded Regain and wrote down every mistake I noticed in my first three minutes, backed by my own screenshots." },
+      { label: "WHAT I FOUND", text: "A logo that just sits there, so it looks stuck. A voice that talks with no mute button. Onboarding you can't skip. Copy that assumes you have an exam and competition to beat. A reminder of how far you are from your goal before you've started. And a 2-minute timer that starts on its own." },
+      { label: "THE FIXES", text: "Animate the hourglass logo while the app loads. Put Mute and Skip on the first screen. Add a “no specific goal” answer. Let people set the timer themselves. Show the motivating “climb” after the first finished session, so it feels like progress, not pressure." },
+      { label: "WHAT'S NEXT", text: "Use Regain every day for a week, look at what brings people back and what doesn't, and add the findings to the case study." }
+    ],
+    link: "regain-case-study.html",
+    linkLabel: "PLAY THE INTERACTIVE STORY ↗"
   }
 ];
 
