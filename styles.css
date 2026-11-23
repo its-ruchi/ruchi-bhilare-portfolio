@@ -1280,10 +1280,7 @@ img {
   padding-top: 0;
 }
 
-/* Three case studies sit in one row of three. */
-.section-case-studies .project-card {
-  grid-column: span 2;
-}
+/* Four case studies sit in an even 2 x 2 grid (default span 3 of 6). */
 
 .project-card-featured {
   grid-row: auto;
@@ -1860,8 +1857,7 @@ img {
     grid-row: auto;
   }
 
-  .project-card,
-  .section-case-studies .project-card {
+  .project-card {
     grid-column: auto;
     min-height: 0;
   }

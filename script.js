@@ -161,6 +161,20 @@ const projectData = [
     ],
     link: "regain-case-study.html",
     linkLabel: "PLAY THE INTERACTIVE STORY ↗"
+  },
+  {
+    eyebrow: "WEBSITE UX REVIEW · B2B SAAS",
+    title: "Recruit CRM Case Study",
+    sections: [
+      { label: "THE PREMISE", text: "Switching a CRM is a trust decision. An agency owner on the homepage is weighing a move of their whole database, and every small mismatch is one more reason to wait another quarter." },
+      { label: "THE METHOD", text: "I visited recruitcrm.io as if I ran a small agency thinking about switching, and noted every place I got stuck, backed by my own screenshots." },
+      { label: "WHAT I FOUND", text: "A “Switching from…” heading that names one competitor while the card below names another. Three different answers to “how fast can I go live?” A “6 Agents Live” badge above a list of four. A chat box covering the reassurance I came to read. And “Book a demo” seven times on one page, with integration counts that change from section to section." },
+      { label: "THE FIXES", text: "Make the card follow the heading. Tell one go-live timeline the same way everywhere. Keep one live-now / coming-soon agent list across menus. Fold the chat into its icon. Offer two clear doors: a trial and a demo, each saying who it's for." },
+      { label: "QUICK WIN", text: "Start with fixes 1 and 3. They're copy changes: the biggest trust gain for the least work." },
+      { label: "HOW I'D MEASURE IT", text: "Homepage visitors who start a trial or book a demo, visitors who reach “Switch in days” and talk to a migration specialist, and whether chats rise or fall once the box is tucked away." }
+    ],
+    link: "recruit-crm-case-study.html",
+    linkLabel: "PLAY THE INTERACTIVE STORY ↗"
   }
 ];
 
